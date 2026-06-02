@@ -47,12 +47,15 @@
             box-sizing: border-box;
         }
         
-        .controls { flex: 1.3; max-width: 440px; overflow-y: auto; }
-        .canvas { flex: 1.8; background-color: #f8fafc; border: 2px solid #e2e8f0; overflow-y: auto; }
-        .output { flex: 1.4; background-color: #0f172a; color: #f8fafc; overflow-y: auto; }
+        /* Layout distribution split to cleanly support the 4th Column AI Assistant */
+        .controls { flex: 1.1; min-width: 300px; overflow-y: auto; }
+        .canvas { flex: 1.3; background-color: #f8fafc; border: 2px solid #e2e8f0; overflow-y: auto; }
+        .output { flex: 1.1; background-color: #0f172a; color: #f8fafc; overflow-y: auto; }
+        .ai-assistant { flex: 1.1; min-width: 310px; border-left: 4px solid #3b82f6; display: flex; flex-direction: column; }
         
-        h3 { border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; margin-top: 0; color: #1e3a8a; font-size: 15px; }
+        h3 { border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; margin-top: 0; color: #1e3a8a; font-size: 14px; }
         .output h3 { border-color: #334155; color: #38bdf8; }
+        .ai-assistant h3 { color: #2563eb; border-color: #dbeafe; }
         h4 { margin: 12px 0 4px 0; color: #475569; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
         .output h4 { color: #94a3b8; border-bottom: 1px dashed #334155; padding-bottom: 4px; }
 
@@ -120,6 +123,17 @@
         li { margin-bottom: 4px; font-size: 12px; }
         .output-highlight { color: #38bdf8; font-weight: bold; }
         .placeholder-text { color: #94a3b8; font-style: italic; text-align: center; padding-top: 40px; }
+
+        /* Real-Time Interactive Engineering AI Chat Window Component Styling */
+        .chat-history { flex: 1; overflow-y: auto; border: 1px solid #e2e8f0; background: #fafafa; border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
+        .chat-bubble { max-width: 85%; padding: 8px 12px; border-radius: 12px; font-size: 12px; line-height: 1.4; word-wrap: break-word; }
+        .chat-bubble.user { background-color: #3b82f6; color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+        .chat-bubble.ai { background-color: #e2e8f0; color: #1e293b; align-self: flex-start; border-bottom-left-radius: 2px; font-family: inherit; }
+        .chat-bubble.system { font-style: italic; color: #64748b; font-size: 11px; background: transparent; text-align: center; align-self: center; width: 100%; }
+        .chat-input-row { display: flex; gap: 6px; }
+        .chat-input-row input { flex: 1; }
+        .btn-send { background: #2563eb; color: white; border: none; padding: 0 14px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; }
+        .btn-send:hover { background: #1d4ed8; }
 
         /* Dedicated Hidden PDF Snapshot DOM Elements styling */
         #pdf-export-template { display: none; padding: 35px; background: white; color: #1e293b; font-size: 12px; }
@@ -223,6 +237,21 @@
             <div id="warningContainer"></div>
             <div id="resultsLedger">
                 <p class="placeholder-text" style="color: #64748b;">Awaiting process engine generation execution loop...</p>
+            </div>
+        </div>
+
+        <div class="panel ai-assistant">
+            <h3>4. Expert Process AI Assistant</h3>
+            <div class="form-group" style="margin-bottom: 6px;">
+                <label for="apiKeyInput" style="color:#2563eb;">OpenAI API Key (Stored locally)</label>
+                <input type="password" id="apiKeyInput" placeholder="sk-proj-..." style="padding: 4px 8px; font-size:11px;">
+            </div>
+            <div id="chatHistory" class="chat-history">
+                <div class="chat-bubble system">Expert Persona Calibrated: Senior Environmental Process Engineer. Ask anything about design limits, plant footprints, or chemical scaling.</div>
+            </div>
+            <div class="chat-input-row">
+                <input type="text" id="chatMessageInput" placeholder="Describe operational context or anomalies...">
+                <button id="sendChatBtn" class="btn-send">Send</button>
             </div>
         </div>
     </div>
@@ -588,28 +617,58 @@
             });
         }
 
-        const INDUSTRY_DEFAULTS = {
-            MUNICIPAL: { bod: 120, tss: 70, cod: 700, fog: 30, tds: 2272, ph: 8.8 },
-            DAIRY:     { bod: 2500, tss: 800, cod: 4500, fog: 400, tds: 1200, ph: 5.0 },
-            TEXTILE:   { bod: 300, tss: 400, cod: 1200, fog: 20, tds: 6000, ph: 10.0 },
-            PETROCHEM: { bod: 250, tss: 150, cod: 800, fog: 500, tds: 3000, ph: 6.8 }
-        };
+        /* CALIBRATION LOGIC: This system prompt primes the AI model to act strictly as 
+           a Senior Environmental Process Engineer with extensive field experience.
+        */
+        const SYSTEM_CALIBRATION_PROMPT = `You are a Senior Environmental Engineer and Water/Wastewater Treatment Plant (WWTP) process design specialist with decades of hands-on experience in industrial troubleshooting, municipal commissioning, and regulatory compliance. 
+Your guidance must be highly realistic, factual, practical, and grounded in real-world chemical/biological process limitations (e.g., osmotic pressure bounds, flux limits, fouling tendencies, chemical dosing anomalies). 
+Do not give vague theoretical suggestions. Provide exact technical justifications, calculations, or empirical design parameters where appropriate.`;
 
-        document.getElementById('industryType').addEventListener('change', function() {
-            const defaults = INDUSTRY_DEFAULTS[this.value];
-            if (defaults) {
-                document.getElementById('bodInput').value = defaults.bod;
-                document.getElementById('codInput').value = defaults.cod;
-                document.getElementById('tssInput').value = defaults.tss;
-                document.getElementById('tdsInput').value = defaults.tds;
-                document.getElementById('phInput').value = defaults.ph;
-                document.getElementById('fogInput').value = defaults.fog;
+        async function submitUserChatMessage() {
+            const apiKey = document.getElementById('apiKeyInput').value.trim();
+            const messageText = document.getElementById('chatMessageInput').value.trim();
+            const chatHistory = document.getElementById('chatHistory');
+
+            if (!messageText) return;
+
+            // Render user text bubble locally
+            const userBubble = document.createElement('div');
+            userBubble.className = 'chat-bubble user';
+            userBubble.innerText = messageText;
+            chatHistory.appendChild(userBubble);
+            document.getElementById('chatMessageInput').value = '';
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+
+            if (!apiKey) {
+                const errBubble = document.createElement('div');
+                errBubble.className = 'chat-bubble ai';
+                errBubble.innerHTML = "<span style='color:red;'>⚠️ Error: Missing OpenAI API Key. Please insert a valid key in the top input box to authorize requests.</span>";
+                chatHistory.appendChild(errBubble);
+                return;
             }
-        });
 
-        // Event hooks mapped straight to execution paths safely
-        document.getElementById('generateBtn').addEventListener('click', processSmartChain);
-        document.getElementById('pdfBtn').addEventListener('click', exportDesignToPDF);
-    </script>
-</body>
-</html>
+            // Render a temporary loading placeholder
+            const loadingBubble = document.createElement('div');
+            loadingBubble.className = 'chat-bubble ai';
+            loadingBubble.innerText = 'Analyzing stream context...';
+            chatHistory.appendChild(loadingBubble);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+
+            try {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-4o', // Utilizing a fast, highly analytical engineering model choice
+                        messages: [
+                            { role: 'system', content: SYSTEM_CALIBRATION_PROMPT },
+                            { role: 'user', content: messageText }
+                        ],
+                        temperature: 0.3 // Low temperature ensures factual, deterministic responses
+                    })
+                });
+
+                const
