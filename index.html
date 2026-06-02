@@ -116,21 +116,20 @@
         .pfd-arrow { color: #64748b; font-size: 16px; margin: 4px 0; font-weight: bold; text-align: center; }
         
         .warning-banner { background-color: #fef3c7; border-left: 4px solid #d97706; color: #92400e; padding: 8px; border-radius: 6px; font-size: 11px; margin-bottom: 10px; line-height: 1.4; }
-        .danger-banner { background-color: #fee2e2; border-left: 4px solid #dc2626; color: #991b1b; padding: 8px; border-radius: 6px; font-size: 11px; margin-bottom: 10px; line-height: 1.4; }
         ul { padding-left: 16px; margin: 4px 0; }
         li { margin-bottom: 4px; font-size: 12px; }
         .output-highlight { color: #38bdf8; font-weight: bold; }
         .placeholder-text { color: #94a3b8; font-style: italic; text-align: center; padding-top: 40px; }
 
-        /* Hidden PDF Export Template Stylesheet */
-        #pdf-export-template { display: none; padding: 30px; background: white; color: #1e293b; font-size: 12px; }
-        #pdf-export-template h2 { color: #1e3a8a; border-bottom: 2px solid #cbd5e1; padding-bottom: 4px; margin-top: 20px; font-size: 16px; }
+        /* Dedicated Hidden PDF Snapshot DOM Elements styling */
+        #pdf-export-template { display: none; padding: 35px; background: white; color: #1e293b; font-size: 12px; }
+        #pdf-export-template h2 { color: #1e3a8a; border-bottom: 2px solid #cbd5e1; padding-bottom: 4px; margin-top: 25px; font-size: 15px; text-transform: uppercase; }
         #pdf-export-template .pdf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
         #pdf-export-template .pdf-card { background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 6px; }
-        #pdf-export-template table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+        #pdf-export-template table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 11px; }
         #pdf-export-template th, #pdf-export-template td { border: 1px solid #cbd5e1; padding: 6px 10px; text-align: left; }
-        #pdf-export-template th { background-color: #f1f5f9; font-weight: bold; }
-        #pdf-export-template .pdf-pfd-node { border-left: 4px solid #22c55e; background: #f0fdf4; padding: 8px; margin-bottom: 6px; border-top: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; border-radius: 4px; }
+        #pdf-export-template th { background-color: #f1f5f9; font-weight: bold; color: #1e3a8a; }
+        #pdf-export-template .pdf-pfd-node { border-left: 5px solid #22c55e; background: #f0fdf4; padding: 8px; margin-bottom: 6px; border-top: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; border-radius: 4px; }
         #pdf-export-template .pdf-pfd-node.chemical { border-left-color: #3b82f6; background: #eff6ff; }
         #pdf-export-template .pdf-pfd-node.biological { border-left-color: #f59e0b; background: #fef7ea; }
         #pdf-export-template .pdf-pfd-node.advanced { border-left-color: #a855f7; background: #faf5ff; }
@@ -238,28 +237,27 @@
         <div class="pdf-grid">
             <div class="pdf-card">
                 <strong style="color:#1e3a8a; display:block; margin-bottom:6px;">Raw Feed Influent Stream:</strong>
-                <div>• Source Profile: <span id="pdf-src-val"></span></div>
-                <div>• Volumetric Flux: <span id="pdf-flow-val"></span> m³/day</div>
-                <div>• Initial Load Parameters:</div>
-                <div style="padding-left:10px; font-size:11px; color:#475569;">
-                    BOD₅: <span id="pdf-inbod-val"></span> mg/L | COD: <span id="pdf-incod-val"></span> mg/L<br>
-                    TSS: <span id="pdf-intss-val"></span> mg/L | TDS: <span id="pdf-intds-val"></span> mg/L<br>
-                    pH: <span id="pdf-inph-val"></span> | FOG: <span id="pdf-infog-val"></span> mg/L
+                <div>• Source Classification: <span id="pdf-src-val"></span></div>
+                <div>• Volumetric Influx Rate: <span id="pdf-flow-val"></span> m³/day</div>
+                <div style="margin-top: 6px; font-size:11px; color:#475569; border-top: 1px solid #e2e8f0; padding-top: 4px;">
+                    <strong>BOD₅:</strong> <span id="pdf-inbod-val"></span> mg/L | <strong>COD:</strong> <span id="pdf-incod-val"></span> mg/L<br>
+                    <strong>TSS:</strong> <span id="pdf-intss-val"></span> mg/L | <strong>TDS:</strong> <span id="pdf-intds-val"></span> mg/L<br>
+                    <strong>pH:</strong> <span id="pdf-inph-val"></span> | <strong>FOG:</strong> <span id="pdf-infog-val"></span> mg/L
                 </div>
             </div>
             <div class="pdf-card" style="background:#fff7ed; border-color:#ffedd5;">
-                <strong style="color:#c2410c; display:block; margin-bottom:6px;">Target Outflow Properties:</strong>
-                <div>• Mandated Maximum BOD: <span id="pdf-tgtbod-val" style="font-weight:bold; color:#1e293b;"></span> mg/L</div>
-                <div>• Mandated Maximum TSS: <span id="pdf-tgttss-val" style="font-weight:bold; color:#1e293b;"></span> mg/L</div>
-                <div>• Mandated Maximum TDS: <span id="pdf-tgttds-val" style="font-weight:bold; color:#1e293b;"></span> mg/L</div>
+                <strong style="color:#c2410c; display:block; margin-bottom:6px;">Target Property Thresholds:</strong>
+                <div>• Allowed Outflow BOD: <span id="pdf-tgtbod-val" style="font-weight:bold;"></span> mg/L</div>
+                <div>• Allowed Outflow TSS: <span id="pdf-tgttss-val" style="font-weight:bold;"></span> mg/L</div>
+                <div>• Allowed Outflow TDS: <span id="pdf-tgttds-val" style="font-weight:bold;"></span> mg/L</div>
             </div>
         </div>
 
-        <h2>2. System Engineering Optimization Results</h2>
+        <h2>2. System Sizing & Performance Metrics</h2>
         <div id="pdf-ledger-target"></div>
 
         <div style="page-break-before: always;"></div>
-        <h2>3. Engineered Process Flow Schematic (PFD Chain)</h2>
+        <h2>3. Full Plant Schematic Arrangement (PFD Node Sequencing)</h2>
         <div id="pdf-pfd-target" style="margin-top:10px;"></div>
     </div>
 
@@ -419,8 +417,6 @@
 
             renderDynamicPFDHTML(sim.chainNodes);
             renderAnalyticalLedger(sim.warnings, sim.chainNodes, influent, targets);
-
-            // Populate the print-ready static PDF document mirrors immediately
             populatePdfStructuralMirrors(influent, targets, sim.chainNodes);
 
             document.getElementById('pdfBtn').style.display = 'block';
@@ -452,4 +448,168 @@
         function renderAnalyticalLedger(warnings, nodes, inf, tgt) {
             const ledger = document.getElementById('resultsLedger');
             const warningContainer = document.getElementById('warningContainer');
-            warningContainer.innerHTML =
+            warningContainer.innerHTML = '';
+
+            warnings.forEach(warn => {
+                warningContainer.innerHTML += `<div class="warning-banner">${warn}</div>`;
+            });
+
+            if (warnings.length === 0) {
+                warningContainer.innerHTML = `<div class="warning-banner" style="background-color:#e6f4ea; border-left-color:#137333; color:#137333;">✓ <strong>Total Chain Compliance:</strong> The multi-barrier process sequence successfully achieves all target outflow properties.</div>`;
+            }
+
+            const nodeCount = nodes.length;
+            const estimatedCAPEX = Math.round((2800 + (nodeCount * 1200)) * Math.pow(inf.flow, 0.74));
+            const estimatedOPEXM3 = Math.round((0.60 + (nodeCount * 0.28)) * 100) / 100;
+
+            let tableRows = '';
+            nodes.forEach(n => {
+                tableRows += `
+                    <tr style="border-bottom:1px dotted #1e293b;">
+                        <td style="padding:4px; opacity:0.9;">${n.title}</td>
+                        <td style="padding:4px; text-align:right; color:#38bdf8;">${n.data.inputTss} mg/L</td>
+                        <td style="padding:4px; text-align:right; color:#34d399;">${n.data.outputTss} mg/L</td>
+                    </tr>
+                `;
+            });
+
+            let markup = `
+                <h4>1. Boundary Efficiency Demands</h4>
+                <ul>
+                    <li>Process Stream Flux: <span class="output-highlight">${inf.flow} m³/day</span></li>
+                    <li>Required Organic Destruction: <span class="output-highlight">${(((inf.bod - tgt.bod)/inf.bod)*100).toFixed(1)}%</span></li>
+                    <li>Required Mineral Interception: <span class="output-highlight">${(((inf.tds - tgt.tds)/inf.tds)*100).toFixed(1)}%</span></li>
+                </ul>
+
+                <h4>2. Unit Chain Mass Balance Analytics</h4>
+                <table style="width:100%; border-collapse:collapse; margin:5px 0; font-size:11px; color:#cbd5e1;">
+                    <tr style="border-bottom:1px solid #334155; text-align:left;">
+                        <th style="padding:4px;">Operation Unit Node Name</th>
+                        <th style="padding:4px; text-align:right;">In TSS</th>
+                        <th style="padding:4px; text-align:right;">Out TSS</th>
+                    </tr>
+                    ${tableRows}
+                </table>
+
+                <h4>3. Cumulative Process Cost Curves</h4>
+                <ul>
+                    <li>Active Process Unit Steps: <span class="output-highlight">${nodeCount} Discrete Nodes</span></li>
+                    <li>Estimated Asset CAPEX Cost: <span class="output-highlight">€${estimatedCAPEX.toLocaleString()} EUR</span></li>
+                    <li>Calculated Specific OPEX Cost: <span class="output-highlight">€${estimatedOPEXM3.toFixed(2)} EUR/m³</span></li>
+                    <li>Daily Operational Reagent/Power Bill: <span class="output-highlight">€${Math.round(estimatedOPEXM3 * inf.flow).toLocaleString()} EUR/day</span></li>
+                </ul>
+            `;
+
+            ledger.innerHTML = markup;
+        }
+
+        function populatePdfStructuralMirrors(inf, tgt, nodes) {
+            document.getElementById('pdf-src-val').innerText = inf.industry;
+            document.getElementById('pdf-flow-val').innerText = inf.flow;
+            document.getElementById('pdf-inbod-val').innerText = inf.bod;
+            document.getElementById('pdf-incod-val').innerText = inf.cod;
+            document.getElementById('pdf-intss-val').innerText = inf.tss;
+            document.getElementById('pdf-intds-val').innerText = inf.tds;
+            document.getElementById('pdf-inph-val').innerText = inf.ph;
+            document.getElementById('pdf-infog-val').innerText = inf.fog;
+
+            document.getElementById('pdf-tgtbod-val').innerText = tgt.bod;
+            document.getElementById('pdf-tgttss-val').innerText = tgt.tss;
+            document.getElementById('pdf-tgttds-val').innerText = tgt.tds;
+
+            const nodeCount = nodes.length;
+            const estimatedCAPEX = Math.round((2800 + (nodeCount * 1200)) * Math.pow(inf.flow, 0.74));
+            const estimatedOPEXM3 = Math.round((0.60 + (nodeCount * 0.28)) * 100) / 100;
+
+            let tableRowsHtml = '';
+            nodes.forEach(n => {
+                tableRowsHtml += `
+                    <tr>
+                        <td><strong>${n.title}</strong></td>
+                        <td>${n.data.inputTss} mg/L</td>
+                        <td>${n.data.outputTss} mg/L</td>
+                        <td>${n.data.metric}</td>
+                    </tr>
+                `;
+            });
+
+            let ledgerHtml = `
+                <ul>
+                    <li><strong>Required Target BOD Removal Efficiency:</strong> ${(((inf.bod - tgt.bod)/inf.bod)*100).toFixed(1)}%</li>
+                    <li><strong>Required Target TDS Mineral Desalination:</strong> ${(((inf.tds - tgt.tds)/inf.tds)*100).toFixed(1)}%</li>
+                    <li><strong>Estimated System CAPEX Requirement:</strong> €${estimatedCAPEX.toLocaleString()} EUR</li>
+                    <li><strong>Estimated System Run OPEX Density:</strong> €${estimatedOPEXM3.toFixed(2)} EUR per m³ treated</li>
+                    <li><strong>Aggregated Daily Energy & Reagent Overhead:</strong> €${Math.round(estimatedOPEXM3 * inf.flow).toLocaleString()} EUR/day</li>
+                </ul>
+                <h3 style="color: #1e3a8a; font-size: 12px; margin-top:15px; border-bottom: 1px dashed #cbd5e1; padding-bottom:3px;">Mass Balance Ledger (TSS Sinking Points):</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Unit Node Treatment Stage</th>
+                            <th>Incoming Node TSS</th>
+                            <th>Outgoing Node TSS</th>
+                            <th>Sizing Metrics Array</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${tableRowsHtml}
+                    </tbody>
+                </table>
+            `;
+            document.getElementById('pdf-ledger-target').innerHTML = ledgerHtml;
+
+            let pfdHtml = '';
+            nodes.forEach((n, idx) => {
+                pfdHtml += `
+                    <div class="pdf-pfd-node ${n.type}">
+                        <div style="font-weight:bold; font-size:12px; color:#0f172a;">Node Step ${idx + 1}: ${n.title}</div>
+                        <div style="margin:2px 0; color:#475569; font-size:11px;">${n.desc}</div>
+                        <div style="font-size:10px; color:#1e3a8a; font-weight:600;">Sizing/Configuration Field: ${n.data.metric}</div>
+                    </div>
+                `;
+            });
+            document.getElementById('pdf-pfd-target').innerHTML = pfdHtml;
+        }
+
+        function exportDesignToPDF() {
+            const targetElement = document.getElementById('pdf-export-template');
+            targetElement.style.display = 'block';
+
+            const options = {
+                margin:       15,
+                filename:     'Advanced-SHIZ-WWTP-Specification.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, logging: false, useCORS: true },
+                jsPDF:        { unit: 'mm', format: 'letter', orientation: 'portrait' }
+            };
+
+            html2pdf().from(targetElement).set(options).save().then(() => {
+                targetElement.style.display = 'none';
+            });
+        }
+
+        const INDUSTRY_DEFAULTS = {
+            MUNICIPAL: { bod: 120, tss: 70, cod: 700, fog: 30, tds: 2272, ph: 8.8 },
+            DAIRY:     { bod: 2500, tss: 800, cod: 4500, fog: 400, tds: 1200, ph: 5.0 },
+            TEXTILE:   { bod: 300, tss: 400, cod: 1200, fog: 20, tds: 6000, ph: 10.0 },
+            PETROCHEM: { bod: 250, tss: 150, cod: 800, fog: 500, tds: 3000, ph: 6.8 }
+        };
+
+        document.getElementById('industryType').addEventListener('change', function() {
+            const defaults = INDUSTRY_DEFAULTS[this.value];
+            if (defaults) {
+                document.getElementById('bodInput').value = defaults.bod;
+                document.getElementById('codInput').value = defaults.cod;
+                document.getElementById('tssInput').value = defaults.tss;
+                document.getElementById('tdsInput').value = defaults.tds;
+                document.getElementById('phInput').value = defaults.ph;
+                document.getElementById('fogInput').value = defaults.fog;
+            }
+        });
+
+        // Event hooks mapped straight to execution paths safely
+        document.getElementById('generateBtn').addEventListener('click', processSmartChain);
+        document.getElementById('pdfBtn').addEventListener('click', exportDesignToPDF);
+    </script>
+</body>
+</html>
