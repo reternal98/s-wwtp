@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional WWTP Designer</title>
+    <title>Advanced Reverse-Design WWTP Simulator</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         body { 
@@ -19,27 +19,27 @@
         .header { 
             background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); 
             color: white; 
-            padding: 20px; 
+            padding: 15px 20px; 
             text-align: center; 
             box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
             flex-shrink: 0;
         }
-        .header h1 { margin: 0; font-size: 24px; letter-spacing: 0.5px; }
-        .header p { margin: 5px 0 0 0; opacity: 0.8; font-size: 13px; }
+        .header h1 { margin: 0; font-size: 22px; letter-spacing: 0.5px; }
+        .header p { margin: 4px 0 0 0; opacity: 0.8; font-size: 12px; }
         
         .app-container { 
             display: flex; 
-            gap: 20px; 
-            padding: 20px; 
+            gap: 15px; 
+            padding: 15px; 
             box-sizing: border-box; 
             flex: 1;
-            height: calc(100vh - 85px);
+            height: calc(100vh - 75px);
             overflow: hidden; 
         }
         .panel { 
             background: white; 
             border-radius: 12px; 
-            padding: 20px; 
+            padding: 15px; 
             box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
             display: flex; 
             flex-direction: column; 
@@ -47,43 +47,52 @@
             box-sizing: border-box;
         }
         
-        .controls { flex: 1.2; max-width: 420px; overflow-y: auto; }
-        .canvas { flex: 2; background-color: #f8fafc; border: 2px solid #e2e8f0; overflow-y: auto; }
-        .output { flex: 1.5; background-color: #0f172a; color: #f8fafc; overflow-y: auto; }
+        .controls { flex: 1.3; max-width: 440px; overflow-y: auto; }
+        .canvas { flex: 1.8; background-color: #f8fafc; border: 2px solid #e2e8f0; overflow-y: auto; }
+        .output { flex: 1.4; background-color: #0f172a; color: #f8fafc; overflow-y: auto; }
         
-        h3 { border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin-top: 0; color: #1e3a8a; font-size: 18px; }
+        h3 { border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; margin-top: 0; color: #1e3a8a; font-size: 16px; }
         .output h3 { border-color: #334155; color: #38bdf8; }
-        h4 { margin: 15px 0 5px 0; color: #475569; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+        h4 { margin: 12px 0 4px 0; color: #475569; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
         .output h4 { color: #94a3b8; border-bottom: 1px dashed #334155; padding-bottom: 4px; }
 
-        .form-group { margin-bottom: 12px; display: flex; flex-direction: column; gap: 4px; }
-        label { font-weight: 600; font-size: 13px; color: #475569; }
-        input, select { padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; background: #fff; color: #1e293b; box-sizing: border-box; width: 100%; }
+        .form-group { margin-bottom: 10px; display: flex; flex-direction: column; gap: 3px; }
+        label { font-weight: 600; font-size: 12px; color: #475569; }
+        input, select { padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: #fff; color: #1e293b; box-sizing: border-box; width: 100%; }
         
+        .section-box {
+            background: #f8fafc;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px dashed #cbd5e1;
+            margin-bottom: 12px;
+        }
         .grid-inputs { 
             display: grid; 
             grid-template-columns: 1fr 1fr; 
-            gap: 10px; 
-            background: #f8fafc; 
-            padding: 12px; 
-            border-radius: 8px; 
-            border: 1px dashed #cbd5e1; 
-            margin-bottom: 15px; 
+            gap: 8px; 
         }
         
+        /* Specific Outflow Highlight Box */
+        .outflow-box {
+            background: #fff7ed;
+            border: 1px solid #ffedd5;
+        }
+        .outflow-box label { color: #c2410c; }
+        .outflow-box input { border-color: #fdbb2d; }
+
         .btn-generate { 
             background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); 
             color: white; 
             border: none; 
-            padding: 14px; 
+            padding: 12px; 
             border-radius: 8px; 
-            font-size: 16px; 
+            font-size: 15px; 
             font-weight: bold; 
             cursor: pointer; 
-            transition: all 0.2s; 
             box-shadow: 0 4px 6px rgba(37,99,235,0.2);
             width: 100%;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         .btn-generate:hover { background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%); }
 
@@ -91,190 +100,209 @@
             background: linear-gradient(135deg, #059669 0%, #047857 100%);
             color: white;
             border: none;
-            padding: 12px;
+            padding: 10px;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: bold;
             cursor: pointer;
             width: 100%;
-            display: none; /* Only visible after plan is generated */
+            display: none;
             box-shadow: 0 4px 6px rgba(5,150,105,0.2);
         }
-        .btn-pdf:hover { background: linear-gradient(135deg, #047857 0%, #065f46 100%); }
 
-        /* PFD Styles */
+        /* PFD Component Blocks */
         .pfd-container { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 0px; padding-top: 10px; }
-        .pfd-block { width: 90%; background: linear-gradient(to right, #ffffff, #f0fdf4); border-left: 6px solid #22c55e; border-top: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; border-radius: 6px; padding: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); box-sizing: border-box; }
+        .pfd-block { width: 92%; background: linear-gradient(to right, #ffffff, #f0fdf4); border-left: 6px solid #22c55e; border-top: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); box-sizing: border-box; }
         .pfd-block.chemical { background: linear-gradient(to right, #ffffff, #eff6ff); border-left-color: #3b82f6; }
         .pfd-block.biological { background: linear-gradient(to right, #ffffff, #fef7ea); border-left-color: #f59e0b; }
         .pfd-block.advanced { background: linear-gradient(to right, #ffffff, #faf5ff); border-left-color: #a855f7; }
         
-        .pfd-title { font-weight: 700; font-size: 14px; color: #1e293b; margin-bottom: 4px; }
-        .pfd-desc { font-size: 12px; color: #64748b; line-height: 1.4; }
-        .pfd-arrow { color: #64748b; font-size: 20px; margin: 6px 0; font-weight: bold; text-align: center; }
+        .pfd-title { font-weight: 700; font-size: 13px; color: #1e293b; margin-bottom: 3px; }
+        .pfd-desc { font-size: 11px; color: #64748b; line-height: 1.4; }
+        .pfd-arrow { color: #64748b; font-size: 18px; margin: 5px 0; font-weight: bold; text-align: center; }
         
-        .warning-banner { background-color: #fef3c7; border-left: 4px solid #d97706; color: #92400e; padding: 12px; border-radius: 6px; font-size: 12px; margin-bottom: 15px; line-height: 1.4; }
-        ul { padding-left: 20px; margin: 8px 0; }
-        li { margin-bottom: 6px; font-size: 14px; }
+        .warning-banner { background-color: #fef3c7; border-left: 4px solid #d97706; color: #92400e; padding: 10px; border-radius: 6px; font-size: 11px; margin-bottom: 12px; line-height: 1.4; }
+        .danger-banner { background-color: #fee2e2; border-left: 4px solid #dc2626; color: #991b1b; padding: 10px; border-radius: 6px; font-size: 11px; margin-bottom: 12px; line-height: 1.4; }
+        ul { padding-left: 18px; margin: 6px 0; }
+        li { margin-bottom: 4px; font-size: 13px; }
         .output-highlight { color: #38bdf8; font-weight: bold; }
         .placeholder-text { color: #94a3b8; font-style: italic; text-align: center; padding-top: 40px; }
 
-        /* Hidden export container specifically formatted for printable clean standard letter PDFs */
         #pdf-export-template { display: none; padding: 40px; background: white; color: #1e293b; }
-        .pdf-section { margin-bottom: 25px; page-break-inside: avoid; }
-        .pdf-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .pdf-table th, .pdf-table td { border: 1px solid #cbd5e1; padding: 10px; text-align: left; font-size: 13px; }
-        .pdf-table th { background-color: #f1f5f9; font-weight: bold; color: #1e3a8a; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1>Professional Wastewater Treatment Plant Designer</h1>
-        <p>Metcalf & Eddy 5th Edition Engine & Financial Forecasting Tool</p>
+        <h1>Reverse-Design Industrial WWTP Simulator</h1>
+        <p>Dynamic Back-Calculation Sizing Engine Formulated on Target Outflow Limits</p>
     </div>
 
     <div class="app-container">
         <div class="panel controls">
-            <h3>1. Target Operational Goal</h3>
-            <div class="form-group">
-                <label for="designGoal">Effluent Treatment Objective</label>
-                <select id="designGoal">
-                    <option value="DISCHARGE">Environmental River/Sea Discharge</option>
-                    <option value="REUSE">High-Quality Reuse (Process/Irrigation)</option>
-                    <option value="ZLD">Zero Liquid Discharge (ZLD Closed Loop)</option>
-                </select>
-            </div>
-
-            <h3>2. Influent Water Matrix</h3>
-            <div class="form-group">
-                <label for="industryType">Wastewater Category</label>
-                <select id="industryType">
-                    <option value="MUNICIPAL">Municipal / Domestic Sewage</option>
-                    <option value="DAIRY">Dairy & Food Processing</option>
-                    <option value="TEXTILE">Textile & Dyeing Stream</option>
-                    <option value="PETROCHEM">Refinery & Petrochemical</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="flowInput">Design Flow Rate (m³/day)</label>
-                <input type="number" id="flowInput" value="25" min="1">
-            </div>
-
-            <h4>Live Analysis Parameters</h4>
-            <div class="grid-inputs">
+            <h3>1. Influent Stream Parameters</h3>
+            <div class="section-box">
                 <div class="form-group">
-                    <label for="bodInput">BOD₅ (mg/L)</label>
-                    <input type="number" id="bodInput" value="120">
+                    <label for="industryType">Industry Sector Template</label>
+                    <select id="industryType">
+                        <option value="MUNICIPAL">Municipal Domestic Sewage</option>
+                        <option value="DAIRY">Dairy & Food Processing</option>
+                        <option value="TEXTILE">Textile & Dyeing Factory</option>
+                        <option value="PETROCHEM">Refinery & Petrochemical</option>
+                    </select>
                 </div>
                 <div class="form-group">
-                    <label for="codInput">COD (mg/L)</label>
-                    <input type="number" id="codInput" value="700">
+                    <label for="flowInput">Design Flow Volume (m³/day)</label>
+                    <input type="number" id="flowInput" value="25" min="1">
                 </div>
-                <div class="form-group">
-                    <label for="tssInput">TSS (mg/L)</label>
-                    <input type="number" id="tssInput" value="70">
+                <div class="grid-inputs">
+                    <div class="form-group">
+                        <label for="bodInput">Raw BOD₅ (mg/L)</label>
+                        <input type="number" id="bodInput" value="120">
+                    </div>
+                    <div class="form-group">
+                        <label for="codInput">Raw COD (mg/L)</label>
+                        <input type="number" id="codInput" value="700">
+                    </div>
+                    <div class="form-group">
+                        <label for="tssInput">Raw TSS (mg/L)</label>
+                        <input type="number" id="tssInput" value="70">
+                    </div>
+                    <div class="form-group">
+                        <label for="tdsInput">Raw TDS (mg/L)</label>
+                        <input type="number" id="tdsInput" value="2272">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="tdsInput">TDS (mg/L)</label>
-                    <input type="number" id="tdsInput" value="2272">
-                </div>
-                <div class="form-group">
-                    <label for="phInput">Influent pH</label>
-                    <input type="number" id="phInput" value="8.8" step="0.1">
-                </div>
-                <div class="form-group">
-                    <label for="fogInput">FOG (mg/L)</label>
-                    <input type="number" id="fogInput" value="30">
+                <div class="grid-inputs" style="margin-top: 8px;">
+                    <div class="form-group">
+                        <label for="phInput">Raw pH</label>
+                        <input type="number" id="phInput" value="8.8" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label for="fogInput">Raw FOG (mg/L)</label>
+                        <input type="number" id="fogInput" value="30">
+                    </div>
                 </div>
             </div>
 
-            <button id="generateBtn" class="btn-generate">⚡ Generate Design Plan</button>
-            <button id="pdfBtn" class="btn-pdf">📥 Download Engineering PDF Report</button>
+            <h3>2. Mandated Target Outflow Properties</h3>
+            <div class="section-box outflow-box">
+                <p style="margin: 0 0 8px 0; font-size: 11px; color: #ea580c; font-style: italic;">
+                    The software will alter the PFD and scaling math based on these targets:
+                </p>
+                <div class="grid-inputs">
+                    <div class="form-group">
+                        <label for="targetBod">Max Allowed Outflow BOD (mg/L)</label>
+                        <input type="number" id="targetBod" value="20" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="targetTss">Max Allowed Outflow TSS (mg/L)</label>
+                        <input type="number" id="targetTss" value="20" min="0">
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top: 8px;">
+                    <label for="targetTds">Max Allowed Outflow TDS (mg/L)</label>
+                    <input type="number" id="targetTds" value="500" min="0">
+                </div>
+            </div>
+
+            <button id="generateBtn" class="btn-generate">⚡ Reverse-Engineer Plant Design</button>
+            <button id="pdfBtn" class="btn-pdf">📥 Download Design Report PDF</button>
         </div>
 
         <div class="panel canvas">
-            <h3 style="width:100%; text-align:left; color:#1e3a8a;">Dynamic Process Flow Diagram (PFD)</h3>
+            <h3 style="width:100%; text-align:left; color:#1e3a8a;">Custom Process Flow Diagram (PFD)</h3>
             <div id="pfdContainer" class="pfd-container">
-                <p class="placeholder-text">Configure parameters and click "Generate Design Plan" to build blocks...</p>
+                <p class="placeholder-text">Define raw conditions and targets, then click run...</p>
             </div>
         </div>
 
         <div id="outputPanel" class="panel output">
-            <h3>3. Live Engineering Report</h3>
+            <h3>3. Sizing & Compliance Ledger</h3>
             <div id="warningContainer"></div>
             <div id="resultsLedger">
-                <p class="placeholder-text" style="color: #64748b;">Awaiting calculation trigger...</p>
+                <p class="placeholder-text" style="color: #64748b;">Awaiting reverse calculations trigger...</p>
             </div>
         </div>
     </div>
 
     <div id="pdf-export-template">
         <div style="text-align: center; border-bottom: 3px solid #1e3a8a; padding-bottom: 15px; margin-bottom: 20px;">
-            <h1 style="color: #1e3a8a; margin: 0; font-size: 28px;">WWTP Engineering Design Report</h1>
-            <p style="color: #475569; margin: 5px 0 0 0; font-style: italic;">Generated via Metcalf & Eddy Simulation Engine Matrix</p>
+            <h1 style="color: #1e3a8a; margin: 0; font-size: 26px;">WWTP Reverse-Design Engineering Plan</h1>
+            <p style="color: #475569; margin: 5px 0 0 0; font-style: italic;">Calculated via Real-Time Efficiency Deficit Algorithms</p>
         </div>
         <div id="pdf-content-target"></div>
     </div>
 
     <script>
-        class WastewaterInfluent {
-            constructor(flow, bod, tss, cod, industryType) {
-                this.flow = flow; 
-                this.industryType = industryType;
-                this.bod = bod;
-                this.tss = tss;
-                this.cod = cod;
-                this.fog = 30;
-                this.tds = 2272;
-                this.ph = 8.8;
-            }
-            getDailyMassLoadings() {
-                return {
-                    bodKgPerDay: (this.flow * this.bod) / 1000,
-                    tssKgPerDay: (this.flow * this.tss) / 1000,
-                    codKgPerDay: (this.flow * this.cod) / 1000
-                };
-            }
-            calculatePrimaryStages() {
-                return {
-                    flashMixerM3: Math.round((this.flow / 24 / 3600) * 45 * 100) / 100, // 45s flash mix volume
-                    flocculatorM3: Math.round((this.flow / 24 / 60) * 25 * 10) / 10,   // 25m floc mix volume
-                    eqTankVolumeM3: Math.round((this.flow / 24) * 6 * 10) / 10,       // 6h EQ volume
-                    primaryClarifierAreaM2: Math.round((this.flow / 35) * 10) / 10
-                };
-            }
-            calculateAerationTank(goalKey) {
-                const SRT = 12; const Y = 0.6; const b = 0.06; const MLSS = 3000;
-                const targetEffBOD = (goalKey === "DISCHARGE") ? 20 : 5;
-                const requiredVolume = (this.flow * SRT * Y * (this.bod - targetEffBOD)) / (MLSS * (1 + (b * SRT)));
-                return {
-                    tankVolumeM3: Math.max(2, Math.round(requiredVolume)),
-                    hrtHours: Math.round(((requiredVolume / this.flow) * 24) * 10) / 10
-                };
-            }
-            // Real-world economic metrics derived from standard industrial curves
-            calculateEconomics(goalKey, hasChemicalPretreatment) {
-                let baseFactor = 0;
-                let opexFactor = 0;
+        // REVERSE-DESIGN CONSTRUCTOR CLASS
+        class WWTPReverseEngine {
+            constructor(influent, targets) {
+                this.flow = influent.flow;
+                this.industry = influent.industry;
+                this.rawBod = influent.bod;
+                this.rawTss = influent.tss;
+                this.rawCod = influent.cod;
+                this.rawTds = influent.tds;
+                this.rawPh = influent.ph;
+                this.rawFog = influent.fog;
 
-                if (goalKey === "DISCHARGE") { baseFactor = 4500; opexFactor = 1.25; }
-                else if (goalKey === "REUSE") { baseFactor = 7200; opexFactor = 2.40; }
-                else if (goalKey === "ZLD") { baseFactor = 14500; opexFactor = 6.80; }
+                this.limitBod = Math.max(0, targets.bod);
+                this.limitTss = Math.max(0, targets.tss);
+                this.limitTds = Math.max(0, targets.tds);
+            }
 
-                if (hasChemicalPretreatment) {
-                    baseFactor += 1100; // Capital expense cost of flash mixers/flocculators/dosing skids
-                    opexFactor += 0.45; // Chemical reagent costs per cubic meter
+            // Figure out what percentage of the pollution we actually need to eliminate
+            evaluateRequiredEfficiencies() {
+                return {
+                    bodRemovalNeeded: ((this.rawBod - this.limitBod) / this.rawBod) * 100,
+                    tssRemovalNeeded: ((this.rawTss - this.limitTss) / this.rawTss) * 100,
+                    tdsRemovalNeeded: ((this.rawTds - this.limitTds) / this.rawTds) * 100
+                };
+            }
+
+            // Metcalf & Eddy Sizing Loop governed by the user's targeted outflow limit
+            calculateSizing(efficiencies) {
+                // If user demands extremely low TSS, force secondary filtration footprint adjustments
+                let primaryTssEfficiency = 0.50; 
+                if (efficiencies.tssRemovalNeeded > 90 || this.rawTss > 200) {
+                    primaryTssEfficiency = 0.75; // Chemical coagulation assist
                 }
 
-                // Economy of scale sizing coefficient factor
-                const scaleFactor = Math.pow(this.flow, 0.72);
-                const estimatedCAPEX = Math.round(baseFactor * scaleFactor);
-                const estimatedOPEXPerM3 = Math.round(opexFactor * 100) / 100;
-                const dailyOPEX = Math.round(estimatedOPEXPerM3 * this.flow);
+                const eqTankVolume = (this.flow / 24) * 6; // 6h Equalization basin volume
+                const primaryClarifierArea = this.flow / 35;
 
-                return { capex: estimatedCAPEX, opexPerM3: estimatedOPEXPerM3, dailyOpex: dailyOPEX };
+                // Biological Kinetic Loop back-calculating from target outflow BOD
+                const SRT = (efficiencies.bodRemovalNeeded > 95) ? 15 : 10; // Elevate Sludge Age for intense polishing
+                const Y = 0.6; const b = 0.06; const MLSS = 3200;
+                
+                // Pure formula scaling bound directly to the user's custom limit
+                const requiredBioVolume = (this.flow * SRT * Y * (this.rawBod - this.limitBod)) / (MLSS * (1 + (b * SRT)));
+                const hrtHours = (requiredBioVolume / this.flow) * 24;
+
+                return {
+                    eqVolumeM3: Math.round(eqTankVolume * 10) / 10,
+                    primaryAreaM2: Math.round(primaryClarifierArea * 10) / 10,
+                    aerationVolumeM3: Math.max(2, Math.round(requiredBioVolume)),
+                    hrtHours: Math.round(hrtHours * 10) / 10
+                };
+            }
+
+            // Back-calculates commercial CAPEX and running costs based on tech stack severity
+            calculateFinancials(techStack) {
+                let baseFactor = 3500;
+                let opexFactor = 0.90;
+
+                if (techStack.requiresCoagulation) { baseFactor += 1200; opexFactor += 0.40; }
+                if (techStack.requiresMBR) { baseFactor += 3000; opexFactor += 1.10; }
+                if (techStack.requiresRO) { baseFactor += 5500; opexFactor += 2.10; }
+                if (techStack.requiresEvaporator) { baseFactor += 9000; opexFactor += 4.50; }
+
+                const scaleFactor = Math.pow(this.flow, 0.72);
+                const capex = Math.round(baseFactor * scaleFactor);
+                const dailyOpex = Math.round(opexFactor * this.flow);
+
+                return { capex, opexPerM3: opexFactor, dailyOpex };
             }
         }
 
@@ -286,8 +314,8 @@
         };
 
         function handleIndustryChange() {
-            const selectedIndustry = document.getElementById('industryType').value;
-            const defaults = INDUSTRY_DEFAULTS[selectedIndustry];
+            const industry = document.getElementById('industryType').value;
+            const defaults = INDUSTRY_DEFAULTS[industry];
             if (defaults) {
                 document.getElementById('bodInput').value = defaults.bod;
                 document.getElementById('codInput').value = defaults.cod;
@@ -298,70 +326,86 @@
             }
         }
 
-        function runDesignGeneration() {
-            const goal = document.getElementById('designGoal').value;
-            const industry = document.getElementById('industryType').value;
+        function runReverseDesign() {
             const flow = parseFloat(document.getElementById('flowInput').value) || 0;
+            const industry = document.getElementById('industryType').value;
             
-            const manualBod = parseFloat(document.getElementById('bodInput').value) || 0;
-            const manualCod = parseFloat(document.getElementById('codInput').value) || 0;
-            const manualTss = parseFloat(document.getElementById('tssInput').value) || 0;
-            const manualTds = parseFloat(document.getElementById('tdsInput').value) || 0;
-            const manualPh = parseFloat(document.getElementById('phInput').value) || 7.0;
-            const manualFog = parseFloat(document.getElementById('fogInput').value) || 0;
+            const influent = {
+                flow, industry,
+                bod: parseFloat(document.getElementById('bodInput').value) || 0,
+                cod: parseFloat(document.getElementById('codInput').value) || 0,
+                tss: parseFloat(document.getElementById('tssInput').value) || 0,
+                tds: parseFloat(document.getElementById('tdsInput').value) || 0,
+                ph: parseFloat(document.getElementById('phInput').value) || 7.0,
+                fog: parseFloat(document.getElementById('fogInput').value) || 0
+            };
 
-            // Coagulation/Flocculation triggering criterion: TSS threshold or industrial specific layout
-            const requiresChemicalPretreatment = (manualTss > 200 || industry === "TEXTILE" || industry === "DAIRY");
+            const targets = {
+                bod: parseFloat(document.getElementById('targetBod').value),
+                tss: parseFloat(document.getElementById('targetTss').value),
+                tds: parseFloat(document.getElementById('targetTds').value)
+            };
 
-            const activeEngine = new WastewaterInfluent(flow, manualBod, manualTss, manualCod, industry);
-            const loadings = activeEngine.getDailyMassLoadings();
-            const primarySpecs = activeEngine.calculatePrimaryStages();
-            const biologicalSpecs = activeEngine.calculateAerationTank(goal);
-            const economicSpecs = activeEngine.calculateEconomics(goal, requiresChemicalPretreatment);
+            const engine = new WWTPReverseEngine(influent, targets);
+            const efficiencies = engine.evaluateRequiredEfficiencies();
 
-            renderPFDVisuals(manualFog, manualTds, manualCod, manualBod, manualTss, manualPh, industry, goal, requiresChemicalPretreatment);
-            renderReportLedger(flow, manualFog, manualTds, manualCod, manualBod, manualPh, loadings, primarySpecs, biologicalSpecs, economicSpecs, goal, requiresChemicalPretreatment);
-            
-            // Reveal PDF generation shortcut button
+            // STEP 2: REVERSE ENGINEERING HARDWARE TRIGGERS
+            const techStack = {
+                requiresCoagulation: (efficiencies.tssRemovalNeeded > 80 || influent.tss > 200 || industry === "TEXTILE"),
+                requiresMBR: (efficiencies.bodRemovalNeeded > 92 || targets.bod < 10 || targets.tss < 5),
+                requiresRO: (efficiencies.tdsRemovalNeeded > 15 || targets.tds < 600),
+                requiresEvaporator: (targets.tds <= 50 || efficiencies.tdsRemovalNeeded > 98)
+            };
+
+            // Force physical/biological sanity checks
+            if (targets.bod >= influent.bod) efficiencies.bodRemovalNeeded = 0;
+            if (targets.tss >= influent.tss) efficiencies.tssRemovalNeeded = 0;
+            if (targets.tds >= influent.tds) efficiencies.tdsRemovalNeeded = 0;
+
+            const sizing = engine.calculateSizing(efficiencies);
+            const finance = engine.calculateFinancials(techStack);
+
+            renderPFDCanvas(influent, targets, techStack);
+            renderReportLedger(influent, targets, efficiencies, sizing, finance, techStack);
+
             document.getElementById('pdfBtn').style.display = 'block';
         }
 
-        function renderPFDVisuals(fog, tds, cod, bod, tss, ph, industry, goal, hasChem) {
+        function renderPFDCanvas(influent, targets, tech) {
             const container = document.getElementById('pfdContainer');
             container.innerHTML = '';
             let items = [];
 
-            items.push({title: "Mechanical Bar Screening", desc: "Removes coarse physics, trash, and gross organic debris to safeguard pumps.", type: "physical"});
-            items.push({title: "Flow Equalization Tank", desc: "Buffers extreme hourly hydraulic spikes and normalizes chemical loading parameters.", type: "physical"});
+            items.push({title: "Coarse Bar Screening", desc: "Intercepts larger raw physical objects and structural debris.", type: "physical"});
+            items.push({title: "Equalization Flow Damper", desc: "Controls hydraulic surge spikes to stabilize down-stream chemical processes.", type: "physical"});
 
-            if (ph < 6.5 || ph > 8.2) {
-                items.push({title: "Chemical pH Neutralization Step", desc: `Injects precise automated dosing agents to balance highly corrosive inbound pH (${ph}).`, type: "chemical"});
+            if (influent.ph < 6.5 || influent.ph > 8.2) {
+                items.push({title: "Automated pH Correction Module", desc: `Doses chemical neutralizers to stabilize raw pH (${influent.ph}) for survival profiles.`, type: "chemical"});
             }
-            if (fog > 50) {
-                items.push({title: "Dissolved Air Flotation (DAF)", desc: "Floats away lipids and fats using microscopic air bubbles to protect active downstream bacteria panels.", type: "chemical"});
-            }
-
-            // DYNAMIC INJECTION: Coagulation & Flocculation Stages
-            if (hasChem) {
-                items.push({title: "Coagulation Flash Mixer", desc: "High-RPM mechanical rapid mix inducing metallic charge-neutralization across suspended colloid matrices.", type: "chemical"});
-                items.push({title: "Flocculation Maturation Chamber", desc: "Slow paddle grouping (25m retention) enabling small destabilized particles to link into heavy settling macroflocs.", type: "chemical"});
+            if (influent.fog > 50) {
+                items.push({title: "Dissolved Air Flotation (DAF)", desc: "Separates dense grease components to protect downstream bio-membranes.", type: "chemical"});
             }
 
-            items.push({title: "Primary Sedimentation Clarifier", desc: "Gravity settling reduces organic solids, stripping up to 60% of raw inbound TSS.", type: "physical"});
-
-            if (goal === "DISCHARGE") {
-                items.push({title: "MLE Activated Sludge Bioreactor", desc: "Anoxic + Aerobic sequential configurations eliminating dissolved organic loads.", type: "biological"});
-                items.push({title: "Secondary Settling Clarifier", desc: "Separates active biological microbial sludge mass clean away from processed water grids.", type: "physical"});
+            // Tech stack dynamically altered by custom outflow limitations
+            if (tech.requiresCoagulation) {
+                items.push({title: "Chemical Coagulation Reactor", desc: "Rapidly injects metallic coagulants to collapse colloidal solid surface charge barriers.", type: "chemical"});
+                items.push({title: "Flocculation Settler System", desc: "Gently aggregates destabilized sludge chains into larger macroscopic clusters.", type: "chemical"});
             } else {
-                items.push({title: "Membrane Bioreactor (MBR Submerged Module)", desc: "Combines high efficiency biological degradation with micro-porous ultrafiltration loops, replacing secondary clarifiers entirely.", type: "biological"});
+                items.push({title: "Primary Gravity Settler", desc: "Standard economic physical clarifier sliding out core suspended solids.", type: "physical"});
             }
 
-            if (goal === "REUSE" || goal === "ZLD") {
-                items.push({title: "Multimedia Sand Filter Skid", desc: "Dual barrier media filtration reducing Silt Density Index (SDI) constraints lower than 3.0.", type: "physical"});
-                items.push({title: "Reverse Osmosis (RO) Filtration Unit", desc: "High pressure crossflow desalination separating pure industrial process water away from high minerals.", type: "advanced"});
+            if (tech.requiresMBR) {
+                items.push({title: "Membrane Bioreactor (MBR Pack)", desc: `Forced due to intensive target outflow thresholds (BOD:${targets.bod}/TSS:${targets.tss}). Ultrafiltration loops replace standard clarifiers entirely.`, type: "biological"});
+            } else {
+                items.push({title: "Conventional Aeration Tank (CAS)", desc: "Standard biological reactor utilizing air bubbles to oxidize active organic parameters.", type: "biological"});
+                items.push({title: "Secondary Sedimentation Unit", desc: "Decants secondary biological sludge floc cleanly off the final stream path.", type: "physical"});
             }
-            if (goal === "ZLD") {
-                items.push({title: "Thermal Evaporator & Crystallizer", desc: "Boils remaining corrosive waste brine down into solid, dry dry salt cakes. Achieves absolute 100% loop containment.", type: "advanced"});
+
+            if (tech.requiresRO) {
+                items.push({title: "High-Pressure RO Desalination Skid", desc: `Triggered due to target TDS reduction limit (${targets.tds} mg/L). Strips away dissolved minerals and salts.`, type: "advanced"});
+            }
+            if (tech.requiresEvaporator) {
+                items.push({title: "Thermal Evaporator & Crystallizer", desc: `Forced because target parameter is zero or extreme. Recovers remaining waste brine into dry solid salt cakes.`, type: "advanced"});
             }
 
             items.forEach((item, index) => {
@@ -379,69 +423,66 @@
             });
         }
 
-        function renderReportLedger(flow, fog, tds, cod, bod, ph, loadings, primary, bio, econ, goal, hasChem) {
+        function renderReportLedger(influent, targets, eff, sizing, finance, tech) {
             const ledger = document.getElementById('resultsLedger');
             const warningContainer = document.getElementById('warningContainer');
             warningContainer.innerHTML = '';
-            
-            if (ph < 6.5 || ph > 8.5) {
-                warningContainer.innerHTML += `<div class="warning-banner">⚠️ <strong>Nitrification Process Halt:</strong> Inbound pH (${ph}) limits bacterial survival. Dosing neutralization systems must be active ahead of secondary basins.</div>`;
+
+            // PROCESS VIOLATION RADAR ALERTS
+            if (targets.tds <= 0) {
+                warningContainer.innerHTML += `<div class="danger-banner">🚨 <strong>Absolute Zero Constraint:</strong> A target TDS of 0 mg/L demands total Thermal Evaporation. Capital cost curves will elevate massively.</div>`;
             }
-            if (hasChem) {
-                warningContainer.innerHTML += `<div class="warning-banner">💡 <strong>Chemical Coagulation Notice:</strong> High pollutant parameters triggered a dynamic coagulation/flocculation pre-treatment requirement. Standard gravity settling is insufficient; jar test optimization recommended.</div>`;
+            if (targets.bod < 2 && !tech.requiresMBR) {
+                warningContainer.innerHTML += `<div class="warning-banner">⚠️ <strong>Kinetic Limitation:</strong> Conventional clarifiers cannot consistently yield BOD < 5 mg/L. An MBR configuration was systemically forced.</div>`;
             }
 
             const markup = `
-                <h4>1. Mass Loading Calculations</h4>
+                <h4>1. Required System Efficiencies</h4>
                 <ul>
-                    <li>Volumetric Design Point: <span class="output-highlight">${flow} m³/day</span></li>
-                    <li>Inbound BOD Weight: <span class="output-highlight">${Math.round(loadings.bodKgPerDay * 10)/10} kg/day</span></li>
-                    <li>Inbound TSS Weight: <span class="output-highlight">${Math.round(loadings.tssKgPerDay * 10)/10} kg/day</span></li>
-                    <li>COD to BOD Biodegradability Ratio: <span class="output-highlight">${(cod/bod).toFixed(1)}</span></li>
+                    <li>Target Volumetric Rate: <span class="output-highlight">${influent.flow} m³/day</span></li>
+                    <li>Required BOD Reduction: <span class="output-highlight">${eff.bodRemovalNeeded.toFixed(1)}%</span> (From ${influent.bod} to ${targets.bod} mg/L)</li>
+                    <li>Required TSS Reduction: <span class="output-highlight">${eff.tssRemovalNeeded.toFixed(1)}%</span> (From ${influent.tss} to ${targets.tss} mg/L)</li>
+                    <li>Required TDS Reduction: <span class="output-highlight">${eff.tdsRemovalNeeded.toFixed(1)}%</span> (From ${influent.tds} to ${targets.tds} mg/L)</li>
                 </ul>
 
-                <h4>2. Sizing Calculations (Metcalf Parameters)</h4>
+                <h4>2. Back-Calculated Process Sizing</h4>
                 <ul>
-                    <li>Equalization Buffer Volume: <span class="output-highlight">${primary.eqTankVolumeM3} m³</span> (6-Hour Buffer)</li>
-                    ${hasChem ? `<li>Flash Coagulator Sizing: <span class="output-highlight">${primary.flashMixerM3} m³</span> (45s Mix)</li>` : ''}
-                    ${hasChem ? `<li>Flocculation Basin Sizing: <span class="output-highlight">${primary.flocculatorM3} m³</span> (25m Retention)</li>` : ''}
-                    <li>Primary Clarifier Surface Area: <span class="output-highlight">${primary.primaryClarifierAreaM2} m²</span></li>
-                    <li>Main Biological Reactor Volume: <span class="output-highlight">${bio.tankVolumeM3} m³</span></li>
-                    <li>Hydraulic Retention Time (HRT): <span class="output-highlight">${bio.hrtHours} Hours</span></li>
+                    <li>Equalization Tank Footprint: <span class="output-highlight">${sizing.eqVolumeM3} m³</span></li>
+                    <li>Biological Basin Volume: <span class="output-highlight">${sizing.aerationVolumeM3} m³</span></li>
+                    <li>Calculated Hydraulic Retention (HRT): <span class="output-highlight">${sizing.hrtHours} Hours</span></li>
+                    <li>Estimated Active Membrane Area: <span class="output-highlight">${tech.requiresMBR ? Math.round(influent.flow * 1.4) + ' m²' : 'N/A (CAS Settler)'}</span></li>
                 </ul>
 
-                <h4>3. Financial & Budget Constraints</h4>
+                <h4>3. Target-Based Process Economics</h4>
                 <ul>
-                    <li>Estimated Capital Investment (CAPEX): <span class="output-highlight">€${econ.capex.toLocaleString()} EUR</span></li>
-                    <li>Specific Operating Cost (OPEX): <span class="output-highlight">€${econ.opexPerM3.toFixed(2)} EUR per m³</span></li>
-                    <li>Total Daily Operating Cost: <span class="output-highlight">€${econ.dailyOpex.toLocaleString()} EUR/day</span></li>
+                    <li>Project CAPEX Budget Projection: <span class="output-highlight">€${finance.capex.toLocaleString()} EUR</span></li>
+                    <li>Specific Target OPEX Matrix: <span class="output-highlight">€${finance.opexPerM3.toFixed(2)} EUR/m³</span></li>
+                    <li>Total Running Cost Projection: <span class="output-highlight">€${finance.dailyOpex.toLocaleString()} EUR/day</span></li>
                 </ul>
             `;
             ledger.innerHTML = markup;
-            // Mirror output directly into our print template area for the document download engine
             document.getElementById('pdf-content-target').innerHTML = markup;
         }
 
-        // Action trigger using html2pdf.js engine to output professional vector PDFs
         function exportDesignToPDF() {
             const targetElement = document.getElementById('pdf-export-template');
-            targetElement.style.display = 'block'; // Temporarily expand for capture
+            targetElement.style.display = 'block';
 
             const options = {
                 margin:       15,
-                filename:     'WWTP-Engineering-Design-Report.pdf',
+                filename:     'Reverse-Design-WWTP-Specification.pdf',
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2, logging: false },
                 jsPDF:        { unit: 'mm', format: 'letter', orientation: 'portrait' }
             };
 
             html2pdf().from(targetElement).set(options).save().then(() => {
-                targetElement.style.display = 'none'; // Collapse template safe out of view
+                targetElement.style.display = 'none';
             });
         }
 
         document.getElementById('industryType').addEventListener('change', handleIndustryChange);
-        document.getElementById('generateBtn').addEventListener('click', runDesignGeneration);
+        document.getElementById('generateBtn').addEventListener('click', runReverseDesign);
         document.getElementById('pdfBtn').addEventListener('click', exportDesignToPDF);
     </script>
 </body>
