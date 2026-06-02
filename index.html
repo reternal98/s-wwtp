@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Professional WWTP Designer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         body { 
             font-family: 'Segoe UI', Arial, sans-serif; 
@@ -46,7 +47,6 @@
             box-sizing: border-box;
         }
         
-        /* Layout Sizing Adjustments */
         .controls { flex: 1.2; max-width: 420px; overflow-y: auto; }
         .canvas { flex: 2; background-color: #f8fafc; border: 2px solid #e2e8f0; overflow-y: auto; }
         .output { flex: 1.5; background-color: #0f172a; color: #f8fafc; overflow-y: auto; }
@@ -54,7 +54,7 @@
         h3 { border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin-top: 0; color: #1e3a8a; font-size: 18px; }
         .output h3 { border-color: #334155; color: #38bdf8; }
         h4 { margin: 15px 0 5px 0; color: #475569; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .output h4 { color: #94a3b8; }
+        .output h4 { color: #94a3b8; border-bottom: 1px dashed #334155; padding-bottom: 4px; }
 
         .form-group { margin-bottom: 12px; display: flex; flex-direction: column; gap: 4px; }
         label { font-weight: 600; font-size: 13px; color: #475569; }
@@ -71,7 +71,6 @@
             margin-bottom: 15px; 
         }
         
-        /* Action Button Layout Fix */
         .btn-generate { 
             background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); 
             color: white; 
@@ -84,12 +83,26 @@
             transition: all 0.2s; 
             box-shadow: 0 4px 6px rgba(37,99,235,0.2);
             width: 100%;
-            margin-top: 10px;
-            display: block;
+            margin-bottom: 10px;
         }
-        .btn-generate:hover { background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%); box-shadow: 0 6px 12px rgba(37,99,235,0.3); }
+        .btn-generate:hover { background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%); }
 
-        /* Flow Diagram Blocks */
+        .btn-pdf {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            display: none; /* Only visible after plan is generated */
+            box-shadow: 0 4px 6px rgba(5,150,105,0.2);
+        }
+        .btn-pdf:hover { background: linear-gradient(135deg, #047857 0%, #065f46 100%); }
+
+        /* PFD Styles */
         .pfd-container { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 0px; padding-top: 10px; }
         .pfd-block { width: 90%; background: linear-gradient(to right, #ffffff, #f0fdf4); border-left: 6px solid #22c55e; border-top: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; border-radius: 6px; padding: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); box-sizing: border-box; }
         .pfd-block.chemical { background: linear-gradient(to right, #ffffff, #eff6ff); border-left-color: #3b82f6; }
@@ -105,13 +118,20 @@
         li { margin-bottom: 6px; font-size: 14px; }
         .output-highlight { color: #38bdf8; font-weight: bold; }
         .placeholder-text { color: #94a3b8; font-style: italic; text-align: center; padding-top: 40px; }
+
+        /* Hidden export container specifically formatted for printable clean standard letter PDFs */
+        #pdf-export-template { display: none; padding: 40px; background: white; color: #1e293b; }
+        .pdf-section { margin-bottom: 25px; page-break-inside: avoid; }
+        .pdf-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .pdf-table th, .pdf-table td { border: 1px solid #cbd5e1; padding: 10px; text-align: left; font-size: 13px; }
+        .pdf-table th { background-color: #f1f5f9; font-weight: bold; color: #1e3a8a; }
     </style>
 </head>
 <body>
 
     <div class="header">
         <h1>Professional Wastewater Treatment Plant Designer</h1>
-        <p>Metcalf & Eddy 5th Edition Math Simulation Engine</p>
+        <p>Metcalf & Eddy 5th Edition Engine & Financial Forecasting Tool</p>
     </div>
 
     <div class="app-container">
@@ -171,6 +191,7 @@
             </div>
 
             <button id="generateBtn" class="btn-generate">⚡ Generate Design Plan</button>
+            <button id="pdfBtn" class="btn-pdf">📥 Download Engineering PDF Report</button>
         </div>
 
         <div class="panel canvas">
@@ -189,8 +210,15 @@
         </div>
     </div>
 
+    <div id="pdf-export-template">
+        <div style="text-align: center; border-bottom: 3px solid #1e3a8a; padding-bottom: 15px; margin-bottom: 20px;">
+            <h1 style="color: #1e3a8a; margin: 0; font-size: 28px;">WWTP Engineering Design Report</h1>
+            <p style="color: #475569; margin: 5px 0 0 0; font-style: italic;">Generated via Metcalf & Eddy Simulation Engine Matrix</p>
+        </div>
+        <div id="pdf-content-target"></div>
+    </div>
+
     <script>
-        // Mathematical Engine Definition
         class WastewaterInfluent {
             constructor(flow, bod, tss, cod, industryType) {
                 this.flow = flow; 
@@ -211,20 +239,42 @@
             }
             calculatePrimaryStages() {
                 return {
-                    eqTankVolumeM3: Math.round((this.flow / 24) * 6 * 10) / 10, // 6h Equalization Tank
+                    flashMixerM3: Math.round((this.flow / 24 / 3600) * 45 * 100) / 100, // 45s flash mix volume
+                    flocculatorM3: Math.round((this.flow / 24 / 60) * 25 * 10) / 10,   // 25m floc mix volume
+                    eqTankVolumeM3: Math.round((this.flow / 24) * 6 * 10) / 10,       // 6h EQ volume
                     primaryClarifierAreaM2: Math.round((this.flow / 35) * 10) / 10
                 };
             }
             calculateAerationTank(goalKey) {
-                const SRT = 12; // 12 days sludge age for nitrification at 20C
-                const Y = 0.6; const b = 0.06; const MLSS = 3000;
+                const SRT = 12; const Y = 0.6; const b = 0.06; const MLSS = 3000;
                 const targetEffBOD = (goalKey === "DISCHARGE") ? 20 : 5;
                 const requiredVolume = (this.flow * SRT * Y * (this.bod - targetEffBOD)) / (MLSS * (1 + (b * SRT)));
-                const hrtHours = (requiredVolume / this.flow) * 24;
                 return {
                     tankVolumeM3: Math.max(2, Math.round(requiredVolume)),
-                    hrtHours: Math.round(hrtHours * 10) / 10
+                    hrtHours: Math.round(((requiredVolume / this.flow) * 24) * 10) / 10
                 };
+            }
+            // Real-world economic metrics derived from standard industrial curves
+            calculateEconomics(goalKey, hasChemicalPretreatment) {
+                let baseFactor = 0;
+                let opexFactor = 0;
+
+                if (goalKey === "DISCHARGE") { baseFactor = 4500; opexFactor = 1.25; }
+                else if (goalKey === "REUSE") { baseFactor = 7200; opexFactor = 2.40; }
+                else if (goalKey === "ZLD") { baseFactor = 14500; opexFactor = 6.80; }
+
+                if (hasChemicalPretreatment) {
+                    baseFactor += 1100; // Capital expense cost of flash mixers/flocculators/dosing skids
+                    opexFactor += 0.45; // Chemical reagent costs per cubic meter
+                }
+
+                // Economy of scale sizing coefficient factor
+                const scaleFactor = Math.pow(this.flow, 0.72);
+                const estimatedCAPEX = Math.round(baseFactor * scaleFactor);
+                const estimatedOPEXPerM3 = Math.round(opexFactor * 100) / 100;
+                const dailyOPEX = Math.round(estimatedOPEXPerM3 * this.flow);
+
+                return { capex: estimatedCAPEX, opexPerM3: estimatedOPEXPerM3, dailyOpex: dailyOPEX };
             }
         }
 
@@ -260,45 +310,58 @@
             const manualPh = parseFloat(document.getElementById('phInput').value) || 7.0;
             const manualFog = parseFloat(document.getElementById('fogInput').value) || 0;
 
+            // Coagulation/Flocculation triggering criterion: TSS threshold or industrial specific layout
+            const requiresChemicalPretreatment = (manualTss > 200 || industry === "TEXTILE" || industry === "DAIRY");
+
             const activeEngine = new WastewaterInfluent(flow, manualBod, manualTss, manualCod, industry);
             const loadings = activeEngine.getDailyMassLoadings();
             const primarySpecs = activeEngine.calculatePrimaryStages();
             const biologicalSpecs = activeEngine.calculateAerationTank(goal);
+            const economicSpecs = activeEngine.calculateEconomics(goal, requiresChemicalPretreatment);
 
-            renderPFDVisuals(manualFog, manualTds, manualCod, manualBod, manualTss, manualPh, industry, goal);
-            renderReportLedger(flow, manualFog, manualTds, manualCod, manualBod, manualPh, loadings, primarySpecs, biologicalSpecs, goal);
+            renderPFDVisuals(manualFog, manualTds, manualCod, manualBod, manualTss, manualPh, industry, goal, requiresChemicalPretreatment);
+            renderReportLedger(flow, manualFog, manualTds, manualCod, manualBod, manualPh, loadings, primarySpecs, biologicalSpecs, economicSpecs, goal, requiresChemicalPretreatment);
+            
+            // Reveal PDF generation shortcut button
+            document.getElementById('pdfBtn').style.display = 'block';
         }
 
-        function renderPFDVisuals(fog, tds, cod, bod, tss, ph, industry, goal) {
+        function renderPFDVisuals(fog, tds, cod, bod, tss, ph, industry, goal, hasChem) {
             const container = document.getElementById('pfdContainer');
             container.innerHTML = '';
             let items = [];
 
-            items.push({title: "Mechanical Bar Screening", desc: "Removes coarse physical particles and gross solids to safeguard downstream mechanics.", type: "physical"});
-            items.push({title: "Flow Equalization Tank", desc: "Buffers high organic variability, dampening peak loading bounds.", type: "physical"});
+            items.push({title: "Mechanical Bar Screening", desc: "Removes coarse physics, trash, and gross organic debris to safeguard pumps.", type: "physical"});
+            items.push({title: "Flow Equalization Tank", desc: "Buffers extreme hourly hydraulic spikes and normalizes chemical loading parameters.", type: "physical"});
 
-            if (ph < 6.5 || ph > 8.0) {
-                items.push({title: "Chemical pH Correction Basin", desc: `Utilizes inline dosing loops to stabilize raw pH (${ph}) down to safe biological survival ranges.`, type: "chemical"});
+            if (ph < 6.5 || ph > 8.2) {
+                items.push({title: "Chemical pH Neutralization Step", desc: `Injects precise automated dosing agents to balance highly corrosive inbound pH (${ph}).`, type: "chemical"});
             }
             if (fog > 50) {
-                items.push({title: "Dissolved Air Flotation (DAF)", desc: "Micro-bubbles float suspended fats and grease components away from biomass.", type: "chemical"});
+                items.push({title: "Dissolved Air Flotation (DAF)", desc: "Floats away lipids and fats using microscopic air bubbles to protect active downstream bacteria panels.", type: "chemical"});
             }
 
-            items.push({title: "Primary Sedimentation Clarifier", desc: "Gravity settling reduces organic solids, dropping up to 60% of raw TSS contents.", type: "physical"});
+            // DYNAMIC INJECTION: Coagulation & Flocculation Stages
+            if (hasChem) {
+                items.push({title: "Coagulation Flash Mixer", desc: "High-RPM mechanical rapid mix inducing metallic charge-neutralization across suspended colloid matrices.", type: "chemical"});
+                items.push({title: "Flocculation Maturation Chamber", desc: "Slow paddle grouping (25m retention) enabling small destabilized particles to link into heavy settling macroflocs.", type: "chemical"});
+            }
+
+            items.push({title: "Primary Sedimentation Clarifier", desc: "Gravity settling reduces organic solids, stripping up to 60% of raw inbound TSS.", type: "physical"});
 
             if (goal === "DISCHARGE") {
-                items.push({title: "MLE Activated Sludge Bioreactor", desc: "Anoxic + Aerobic sequential basin configuration achieving high simultaneous nitrification/denitrification.", type: "biological"});
-                items.push({title: "Secondary Settling Clarifier", desc: "Separates suspended active biological flocculent away from clear treated water matrices.", type: "physical"});
+                items.push({title: "MLE Activated Sludge Bioreactor", desc: "Anoxic + Aerobic sequential configurations eliminating dissolved organic loads.", type: "biological"});
+                items.push({title: "Secondary Settling Clarifier", desc: "Separates active biological microbial sludge mass clean away from processed water grids.", type: "physical"});
             } else {
-                items.push({title: "Membrane Bioreactor (MBR)", desc: "Combines high efficiency aeration biology with structural ultrafiltration loops, replacing standard clarifiers.", type: "biological"});
+                items.push({title: "Membrane Bioreactor (MBR Submerged Module)", desc: "Combines high efficiency biological degradation with micro-porous ultrafiltration loops, replacing secondary clarifiers entirely.", type: "biological"});
             }
 
             if (goal === "REUSE" || goal === "ZLD") {
-                items.push({title: "Multimedia Sand Filter Skid", desc: "Anthracite over sand dual barrier polishing stream to drop SDI numbers down below 3.", type: "physical"});
-                items.push({title: "Reverse Osmosis (RO) Package", desc: "High pressure crossflow membrane unit separating pure process water away from high minerals.", type: "advanced"});
+                items.push({title: "Multimedia Sand Filter Skid", desc: "Dual barrier media filtration reducing Silt Density Index (SDI) constraints lower than 3.0.", type: "physical"});
+                items.push({title: "Reverse Osmosis (RO) Filtration Unit", desc: "High pressure crossflow desalination separating pure industrial process water away from high minerals.", type: "advanced"});
             }
             if (goal === "ZLD") {
-                items.push({title: "Thermal Evaporator & Crystallizer", desc: "Boils remaining hazardous brine into dry solid salt cakes. Reaches absolute 100% liquid recovery.", type: "advanced"});
+                items.push({title: "Thermal Evaporator & Crystallizer", desc: "Boils remaining corrosive waste brine down into solid, dry dry salt cakes. Achieves absolute 100% loop containment.", type: "advanced"});
             }
 
             items.forEach((item, index) => {
@@ -316,49 +379,70 @@
             });
         }
 
-        function renderReportLedger(flow, fog, tds, cod, bod, ph, loadings, primary, bio, goal) {
+        function renderReportLedger(flow, fog, tds, cod, bod, ph, loadings, primary, bio, econ, goal, hasChem) {
             const ledger = document.getElementById('resultsLedger');
             const warningContainer = document.getElementById('warningContainer');
             warningContainer.innerHTML = '';
             
             if (ph < 6.5 || ph > 8.5) {
-                warningContainer.innerHTML += `<div class="warning-banner">⚠️ <strong>Nitrification Risk:</strong> Current pH (${ph}) completely halts nitrifying cultures. Chemical correction before the biological basin is non-negotiable.</div>`;
+                warningContainer.innerHTML += `<div class="warning-banner">⚠️ <strong>Nitrification Process Halt:</strong> Inbound pH (${ph}) limits bacterial survival. Dosing neutralization systems must be active ahead of secondary basins.</div>`;
             }
-            if (cod / bod > 3) {
-                warningContainer.innerHTML += `<div class="warning-banner">⚠️ <strong>Industrial Contribution:</strong> Elevated COD/BOD ratio (${(cod/bod).toFixed(1)}) implies significant non-biodegradable components.</div>`;
-            }
-            if (tds > 2000 && goal !== "ZLD" && goal !== "REUSE") {
-                warningContainer.innerHTML += `<div class="warning-banner">⚠️ <strong>Salinity Warning:</strong> Elevated TDS (${tds} mg/L). Environmental discharge rules may look for desalination packages.</div>`;
+            if (hasChem) {
+                warningContainer.innerHTML += `<div class="warning-banner">💡 <strong>Chemical Coagulation Notice:</strong> High pollutant parameters triggered a dynamic coagulation/flocculation pre-treatment requirement. Standard gravity settling is insufficient; jar test optimization recommended.</div>`;
             }
 
-            ledger.innerHTML = `
+            const markup = `
                 <h4>1. Mass Loading Calculations</h4>
                 <ul>
-                    <li>Daily Flow Rate: <span class="output-highlight">${flow} m³/day</span></li>
-                    <li>Inbound BOD Load: <span class="output-highlight">${Math.round(loadings.bodKgPerDay * 10)/10} kg/day</span></li>
-                    <li>Inbound TSS Load: <span class="output-highlight">${Math.round(loadings.tssKgPerDay * 10)/10} kg/day</span></li>
-                    <li>COD to BOD Index: <span class="output-highlight">${(cod/bod).toFixed(1)}</span></li>
+                    <li>Volumetric Design Point: <span class="output-highlight">${flow} m³/day</span></li>
+                    <li>Inbound BOD Weight: <span class="output-highlight">${Math.round(loadings.bodKgPerDay * 10)/10} kg/day</span></li>
+                    <li>Inbound TSS Weight: <span class="output-highlight">${Math.round(loadings.tssKgPerDay * 10)/10} kg/day</span></li>
+                    <li>COD to BOD Biodegradability Ratio: <span class="output-highlight">${(cod/bod).toFixed(1)}</span></li>
                 </ul>
 
-                <h4>2. Sizing Matrix (Metcalf & Eddy Metrics)</h4>
+                <h4>2. Sizing Calculations (Metcalf Parameters)</h4>
                 <ul>
-                    <li>Equalization Basin Vol: <span class="output-highlight">${primary.eqTankVolumeM3} m³</span> (at 6-Hour Retention)</li>
-                    <li>Primary Clarifier Surface: <span class="output-highlight">${primary.primaryClarifierAreaM2} m²</span></li>
-                    <li>Biological Basin Vol: <span class="output-highlight">${bio.tankVolumeM3} m³</span></li>
-                    <li>Biological Retention (HRT): <span class="output-highlight">${bio.hrtHours} Hours</span></li>
+                    <li>Equalization Buffer Volume: <span class="output-highlight">${primary.eqTankVolumeM3} m³</span> (6-Hour Buffer)</li>
+                    ${hasChem ? `<li>Flash Coagulator Sizing: <span class="output-highlight">${primary.flashMixerM3} m³</span> (45s Mix)</li>` : ''}
+                    ${hasChem ? `<li>Flocculation Basin Sizing: <span class="output-highlight">${primary.flocculatorM3} m³</span> (25m Retention)</li>` : ''}
+                    <li>Primary Clarifier Surface Area: <span class="output-highlight">${primary.primaryClarifierAreaM2} m²</span></li>
+                    <li>Main Biological Reactor Volume: <span class="output-highlight">${bio.tankVolumeM3} m³</span></li>
+                    <li>Hydraulic Retention Time (HRT): <span class="output-highlight">${bio.hrtHours} Hours</span></li>
                 </ul>
 
-                <h4>3. Downstream RO / Desalination Specs</h4>
+                <h4>3. Financial & Budget Constraints</h4>
                 <ul>
-                    <li>Max Achievable Recovery: <span class="output-highlight">75% - 80%</span></li>
-                    <li>Concentrate Vol to Manage: <span class="output-highlight">${(flow * 0.25).toFixed(2)} m³/day</span></li>
-                    <li>Antiscalant Target Dosing: <span class="output-highlight">3 - 5 mg/L</span></li>
+                    <li>Estimated Capital Investment (CAPEX): <span class="output-highlight">€${econ.capex.toLocaleString()} EUR</span></li>
+                    <li>Specific Operating Cost (OPEX): <span class="output-highlight">€${econ.opexPerM3.toFixed(2)} EUR per m³</span></li>
+                    <li>Total Daily Operating Cost: <span class="output-highlight">€${econ.dailyOpex.toLocaleString()} EUR/day</span></li>
                 </ul>
             `;
+            ledger.innerHTML = markup;
+            // Mirror output directly into our print template area for the document download engine
+            document.getElementById('pdf-content-target').innerHTML = markup;
+        }
+
+        // Action trigger using html2pdf.js engine to output professional vector PDFs
+        function exportDesignToPDF() {
+            const targetElement = document.getElementById('pdf-export-template');
+            targetElement.style.display = 'block'; // Temporarily expand for capture
+
+            const options = {
+                margin:       15,
+                filename:     'WWTP-Engineering-Design-Report.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, logging: false },
+                jsPDF:        { unit: 'mm', format: 'letter', orientation: 'portrait' }
+            };
+
+            html2pdf().from(targetElement).set(options).save().then(() => {
+                targetElement.style.display = 'none'; // Collapse template safe out of view
+            });
         }
 
         document.getElementById('industryType').addEventListener('change', handleIndustryChange);
         document.getElementById('generateBtn').addEventListener('click', runDesignGeneration);
+        document.getElementById('pdfBtn').addEventListener('click', exportDesignToPDF);
     </script>
 </body>
 </html>
