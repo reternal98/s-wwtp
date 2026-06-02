@@ -122,14 +122,25 @@
         .output-highlight { color: #38bdf8; font-weight: bold; }
         .placeholder-text { color: #94a3b8; font-style: italic; text-align: center; padding-top: 40px; }
 
-        #pdf-export-template { display: none; padding: 40px; background: white; color: #1e293b; }
+        /* Hidden PDF Export Template Stylesheet */
+        #pdf-export-template { display: none; padding: 30px; background: white; color: #1e293b; font-size: 12px; }
+        #pdf-export-template h2 { color: #1e3a8a; border-bottom: 2px solid #cbd5e1; padding-bottom: 4px; margin-top: 20px; font-size: 16px; }
+        #pdf-export-template .pdf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        #pdf-export-template .pdf-card { background: #f8fafc; border: 1px solid #e2e8f0; padding: 12px; border-radius: 6px; }
+        #pdf-export-template table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+        #pdf-export-template th, #pdf-export-template td { border: 1px solid #cbd5e1; padding: 6px 10px; text-align: left; }
+        #pdf-export-template th { background-color: #f1f5f9; font-weight: bold; }
+        #pdf-export-template .pdf-pfd-node { border-left: 4px solid #22c55e; background: #f0fdf4; padding: 8px; margin-bottom: 6px; border-top: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; border-radius: 4px; }
+        #pdf-export-template .pdf-pfd-node.chemical { border-left-color: #3b82f6; background: #eff6ff; }
+        #pdf-export-template .pdf-pfd-node.biological { border-left-color: #f59e0b; background: #fef7ea; }
+        #pdf-export-template .pdf-pfd-node.advanced { border-left-color: #a855f7; background: #faf5ff; }
     </style>
 </head>
 <body>
 
     <div class="header">
         <h1>Advanced SHIZ WWTP designer</h1>
-        <p>With clean water, future looks brighter</p>
+        <p>with clean water, future looks brighter</p>
     </div>
 
     <div class="app-container">
@@ -218,11 +229,38 @@
     </div>
 
     <div id="pdf-export-template">
-        <div style="text-align: center; border-bottom: 3px solid #1e3a8a; padding-bottom: 15px; margin-bottom: 20px;">
+        <div style="text-align: center; border-bottom: 3px solid #1e3a8a; padding-bottom: 12px; margin-bottom: 15px;">
             <h1 style="color: #1e3a8a; margin: 0; font-size: 24px;">Advanced SHIZ WWTP Design Report</h1>
-            <p style="color: #475569; margin: 5px 0 0 0; font-style: italic;">pure water, future looks brighter</p>
+            <p style="color: #475569; margin: 4px 0 0 0; font-style: italic; font-size: 13px;">with clean water, future looks brighter</p>
         </div>
-        <div id="pdf-content-target"></div>
+        
+        <h2>1. Process Design Boundaries</h2>
+        <div class="pdf-grid">
+            <div class="pdf-card">
+                <strong style="color:#1e3a8a; display:block; margin-bottom:6px;">Raw Feed Influent Stream:</strong>
+                <div>• Source Profile: <span id="pdf-src-val"></span></div>
+                <div>• Volumetric Flux: <span id="pdf-flow-val"></span> m³/day</div>
+                <div>• Initial Load Parameters:</div>
+                <div style="padding-left:10px; font-size:11px; color:#475569;">
+                    BOD₅: <span id="pdf-inbod-val"></span> mg/L | COD: <span id="pdf-incod-val"></span> mg/L<br>
+                    TSS: <span id="pdf-intss-val"></span> mg/L | TDS: <span id="pdf-intds-val"></span> mg/L<br>
+                    pH: <span id="pdf-inph-val"></span> | FOG: <span id="pdf-infog-val"></span> mg/L
+                </div>
+            </div>
+            <div class="pdf-card" style="background:#fff7ed; border-color:#ffedd5;">
+                <strong style="color:#c2410c; display:block; margin-bottom:6px;">Target Outflow Properties:</strong>
+                <div>• Mandated Maximum BOD: <span id="pdf-tgtbod-val" style="font-weight:bold; color:#1e293b;"></span> mg/L</div>
+                <div>• Mandated Maximum TSS: <span id="pdf-tgttss-val" style="font-weight:bold; color:#1e293b;"></span> mg/L</div>
+                <div>• Mandated Maximum TDS: <span id="pdf-tgttds-val" style="font-weight:bold; color:#1e293b;"></span> mg/L</div>
+            </div>
+        </div>
+
+        <h2>2. System Engineering Optimization Results</h2>
+        <div id="pdf-ledger-target"></div>
+
+        <div style="page-break-before: always;"></div>
+        <h2>3. Engineered Process Flow Schematic (PFD Chain)</h2>
+        <div id="pdf-pfd-target" style="margin-top:10px;"></div>
     </div>
 
     <script>
@@ -382,6 +420,9 @@
             renderDynamicPFDHTML(sim.chainNodes);
             renderAnalyticalLedger(sim.warnings, sim.chainNodes, influent, targets);
 
+            // Populate the print-ready static PDF document mirrors immediately
+            populatePdfStructuralMirrors(influent, targets, sim.chainNodes);
+
             document.getElementById('pdfBtn').style.display = 'block';
         }
 
@@ -411,101 +452,4 @@
         function renderAnalyticalLedger(warnings, nodes, inf, tgt) {
             const ledger = document.getElementById('resultsLedger');
             const warningContainer = document.getElementById('warningContainer');
-            warningContainer.innerHTML = '';
-
-            warnings.forEach(warn => {
-                warningContainer.innerHTML += `<div class="warning-banner">${warn}</div>`;
-            });
-
-            if (warnings.length === 0) {
-                warningContainer.innerHTML = `<div class="warning-banner" style="background-color:#e6f4ea; border-left-color:#137333; color:#137333;">✓ <strong>Total Chain Compliance:</strong> The multi-barrier process sequence successfully achieves all target outflow properties.</div>`;
-            }
-
-            const nodeCount = nodes.length;
-            const estimatedCAPEX = Math.round((2800 + (nodeCount * 1200)) * Math.pow(inf.flow, 0.74));
-            const estimatedOPEXM3 = Math.round((0.60 + (nodeCount * 0.28)) * 100) / 100;
-
-            let markup = `
-                <h4>1. Boundary Efficiency Demands</h4>
-                <ul>
-                    <li>Process Stream Flux: <span class="output-highlight">${inf.flow} m³/day</span></li>
-                    <li>Required Organic Destruction: <span class="output-highlight">${(((inf.bod - tgt.bod)/inf.bod)*100).toFixed(1)}%</span></li>
-                    <li>Required Mineral Interception: <span class="output-highlight">${(((inf.tds - tgt.tds)/inf.tds)*100).toFixed(1)}%</span></li>
-                </ul>
-
-                <h4>2. Unit Chain Mass Balance Analytics</h4>
-                <table style="width:100%; border-collapse:collapse; margin:5px 0; font-size:11px; color:#cbd5e1;">
-                    <tr style="border-bottom:1px solid #334155; text-align:left;">
-                        <th style="padding:4px;">Operation Unit Node Name</th>
-                        <th style="padding:4px; text-align:right;">In TSS</th>
-                        <th style="padding:4px; text-align:right;">Out TSS</th>
-                    </tr>
-            `;
-
-            nodes.forEach(n => {
-                markup += `
-                    <tr style="border-bottom:1px dotted #1e293b;">
-                        <td style="padding:4px; opacity:0.9;">${n.title}</td>
-                        <td style="padding:4px; text-align:right; color:#38bdf8;">${n.data.inputTss} mg/L</td>
-                        <td style="padding:4px; text-align:right; color:#34d399;">${n.data.outputTss} mg/L</td>
-                    </tr>
-                `;
-            });
-
-            markup += `
-                </table>
-
-                <h4>3. Cumulative Process Cost Curves</h4>
-                <ul>
-                    <li>Active Process Unit Steps: <span class="output-highlight">${nodeCount} Discrete Nodes</span></li>
-                    <li>Estimated Asset CAPEX Cost: <span class="output-highlight">€${estimatedCAPEX.toLocaleString()} EUR</span></li>
-                    <li>Calculated Specific OPEX Cost: <span class="output-highlight">€${estimatedOPEXM3.toFixed(2)} EUR/m³</span></li>
-                    <li>Daily Operational Reagent/Power Bill: <span class="output-highlight">€${Math.round(estimatedOPEXM3 * inf.flow).toLocaleString()} EUR/day</span></li>
-                </ul>
-            `;
-
-            ledger.innerHTML = markup;
-            document.getElementById('pdf-content-target').innerHTML = markup;
-        }
-
-        function exportDesignToPDF() {
-            const targetElement = document.getElementById('pdf-export-template');
-            targetElement.style.display = 'block';
-
-            const options = {
-                margin:       15,
-                filename:     'Advanced-SHIZ-WWTP-Design.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, logging: false },
-                jsPDF:        { unit: 'mm', format: 'letter', orientation: 'portrait' }
-            };
-
-            html2pdf().from(targetElement).set(options).save().then(() => {
-                targetElement.style.display = 'none';
-            });
-        }
-
-        const INDUSTRY_DEFAULTS = {
-            MUNICIPAL: { bod: 120, tss: 70, cod: 700, fog: 30, tds: 2272, ph: 8.8 },
-            DAIRY:     { bod: 2500, tss: 800, cod: 4500, fog: 400, tds: 1200, ph: 5.0 },
-            TEXTILE:   { bod: 300, tss: 400, cod: 1200, fog: 20, tds: 6000, ph: 10.0 },
-            PETROCHEM: { bod: 250, tss: 150, cod: 800, fog: 500, tds: 3000, ph: 6.8 }
-        };
-
-        document.getElementById('industryType').addEventListener('change', function() {
-            const defaults = INDUSTRY_DEFAULTS[this.value];
-            if (defaults) {
-                document.getElementById('bodInput').value = defaults.bod;
-                document.getElementById('codInput').value = defaults.cod;
-                document.getElementById('tssInput').value = defaults.tss;
-                document.getElementById('tdsInput').value = defaults.tds;
-                document.getElementById('phInput').value = defaults.ph;
-                document.getElementById('fogInput').value = defaults.fog;
-            }
-        });
-
-        document.getElementById('generateBtn').addEventListener('click', processSmartChain);
-        document.getElementById('pdfBtn').addEventListener('click', exportDesignToPDF);
-    </script>
-</body>
-</html>
+            warningContainer.innerHTML =
