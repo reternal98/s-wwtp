@@ -29,8 +29,8 @@
         
         .app-container { 
             display: flex; 
-            gap: 15px; 
-            padding: 15px; 
+            gap: 12px; 
+            padding: 12px; 
             box-sizing: border-box; 
             flex: 1;
             height: calc(100vh - 65px);
@@ -39,7 +39,7 @@
         .panel { 
             background: white; 
             border-radius: 12px; 
-            padding: 15px; 
+            padding: 12px; 
             box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
             display: flex; 
             flex-direction: column; 
@@ -47,16 +47,16 @@
             box-sizing: border-box;
         }
         
-        /* Layout distribution split to cleanly support the 4th Column AI Assistant */
-        .controls { flex: 1.1; min-width: 300px; overflow-y: auto; }
-        .canvas { flex: 1.3; background-color: #f8fafc; border: 2px solid #e2e8f0; overflow-y: auto; }
-        .output { flex: 1.1; background-color: #0f172a; color: #f8fafc; overflow-y: auto; }
-        .ai-assistant { flex: 1.1; min-width: 310px; border-left: 4px solid #3b82f6; display: flex; flex-direction: column; }
+        /* Balanced 4-Column Layout */
+        .controls { flex: 1.0; min-width: 280px; overflow-y: auto; }
+        .canvas { flex: 1.2; background-color: #f8fafc; border: 2px solid #e2e8f0; overflow-y: auto; }
+        .output { flex: 1.0; background-color: #0f172a; color: #f8fafc; overflow-y: auto; }
+        .ai-assistant { flex: 1.1; min-width: 300px; border-left: 4px solid #2563eb; background-color: #ffffff; }
         
-        h3 { border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; margin-top: 0; color: #1e3a8a; font-size: 14px; }
+        h3 { border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; margin-top: 0; color: #1e3a8a; font-size: 13px; text-transform: uppercase; letter-spacing: 0.3px; }
         .output h3 { border-color: #334155; color: #38bdf8; }
         .ai-assistant h3 { color: #2563eb; border-color: #dbeafe; }
-        h4 { margin: 12px 0 4px 0; color: #475569; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+        h4 { margin: 10px 0 4px 0; color: #475569; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
         .output h4 { color: #94a3b8; border-bottom: 1px dashed #334155; padding-bottom: 4px; }
 
         .form-group { margin-bottom: 8px; display: flex; flex-direction: column; gap: 2px; }
@@ -65,10 +65,10 @@
         
         .section-box {
             background: #f8fafc;
-            padding: 10px;
+            padding: 8px;
             border-radius: 8px;
             border: 1px dashed #cbd5e1;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         .grid-inputs { 
             display: grid; 
@@ -84,9 +84,9 @@
             background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); 
             color: white; 
             border: none; 
-            padding: 12px; 
+            padding: 10px; 
             border-radius: 8px; 
-            font-size: 14px; 
+            font-size: 13px; 
             font-weight: bold; 
             cursor: pointer; 
             width: 100%;
@@ -97,7 +97,7 @@
             background: linear-gradient(135deg, #059669 0%, #047857 100%);
             color: white;
             border: none;
-            padding: 10px;
+            padding: 8px;
             border-radius: 8px;
             font-size: 12px;
             font-weight: bold;
@@ -106,9 +106,9 @@
             display: none;
         }
 
-        /* Responsive Flow Diagram Block-Chain Elements */
+        /* Flow Diagram Elements */
         .pfd-container { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 0px; padding-top: 5px; }
-        .pfd-block { width: 94%; background: linear-gradient(to right, #ffffff, #f0fdf4); border-left: 6px solid #22c55e; border-top: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; border-radius: 6px; padding: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); box-sizing: border-box; }
+        .pfd-block { width: 96%; background: linear-gradient(to right, #ffffff, #f0fdf4); border-left: 6px solid #22c55e; border-top: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; border-radius: 6px; padding: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); box-sizing: border-box; }
         .pfd-block.chemical { background: linear-gradient(to right, #ffffff, #eff6ff); border-left-color: #3b82f6; }
         .pfd-block.biological { background: linear-gradient(to right, #ffffff, #fef7ea); border-left-color: #f59e0b; }
         .pfd-block.advanced { background: linear-gradient(to right, #ffffff, #faf5ff); border-left-color: #a855f7; }
@@ -116,26 +116,26 @@
         .pfd-title { font-weight: 700; font-size: 12px; color: #1e293b; margin-bottom: 2px; }
         .pfd-desc { font-size: 11px; color: #64748b; line-height: 1.3; }
         .pfd-metrics { font-size: 10px; color: #1e3a8a; font-weight: 600; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 4px; }
-        .pfd-arrow { color: #64748b; font-size: 16px; margin: 4px 0; font-weight: bold; text-align: center; }
+        .pfd-arrow { color: #64748b; font-size: 14px; margin: 3px 0; font-weight: bold; text-align: center; }
         
-        .warning-banner { background-color: #fef3c7; border-left: 4px solid #d97706; color: #92400e; padding: 8px; border-radius: 6px; font-size: 11px; margin-bottom: 10px; line-height: 1.4; }
+        .warning-banner { background-color: #fef3c7; border-left: 4px solid #d97706; color: #92400e; padding: 8px; border-radius: 6px; font-size: 11px; margin-bottom: 8px; line-height: 1.4; }
         ul { padding-left: 16px; margin: 4px 0; }
         li { margin-bottom: 4px; font-size: 12px; }
         .output-highlight { color: #38bdf8; font-weight: bold; }
-        .placeholder-text { color: #94a3b8; font-style: italic; text-align: center; padding-top: 40px; }
+        .placeholder-text { color: #94a3b8; font-style: italic; text-align: center; padding-top: 40px; font-size: 12px; }
 
-        /* Real-Time Interactive Engineering AI Chat Window Component Styling */
-        .chat-history { flex: 1; overflow-y: auto; border: 1px solid #e2e8f0; background: #fafafa; border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
-        .chat-bubble { max-width: 85%; padding: 8px 12px; border-radius: 12px; font-size: 12px; line-height: 1.4; word-wrap: break-word; }
-        .chat-bubble.user { background-color: #3b82f6; color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
-        .chat-bubble.ai { background-color: #e2e8f0; color: #1e293b; align-self: flex-start; border-bottom-left-radius: 2px; font-family: inherit; }
-        .chat-bubble.system { font-style: italic; color: #64748b; font-size: 11px; background: transparent; text-align: center; align-self: center; width: 100%; }
+        /* Embedded Dynamic AI Consultation System UI */
+        .chat-history { flex: 1; overflow-y: auto; border: 1px solid #e2e8f0; background: #f8fafc; border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
+        .chat-bubble { max-width: 90%; padding: 8px 12px; border-radius: 12px; font-size: 12px; line-height: 1.4; word-wrap: break-word; }
+        .chat-bubble.user { background-color: #2563eb; color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+        .chat-bubble.ai { background-color: #ffffff; color: #1e293b; border: 1px solid #e2e8f0; align-self: flex-start; border-bottom-left-radius: 2px; }
+        .chat-bubble.system { font-style: italic; color: #64748b; font-size: 10px; background: transparent; text-align: center; align-self: center; width: 100%; border: none; padding: 0; }
         .chat-input-row { display: flex; gap: 6px; }
-        .chat-input-row input { flex: 1; }
+        .chat-input-row input { flex: 1; border: 1px solid #cbd5e1; padding: 8px; border-radius: 6px; font-size: 12px; }
         .btn-send { background: #2563eb; color: white; border: none; padding: 0 14px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; }
         .btn-send:hover { background: #1d4ed8; }
 
-        /* Dedicated Hidden PDF Snapshot DOM Elements styling */
+        /* Print Specific Mirror Targets */
         #pdf-export-template { display: none; padding: 35px; background: white; color: #1e293b; font-size: 12px; }
         #pdf-export-template h2 { color: #1e3a8a; border-bottom: 2px solid #cbd5e1; padding-bottom: 4px; margin-top: 25px; font-size: 15px; text-transform: uppercase; }
         #pdf-export-template .pdf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
@@ -158,10 +158,10 @@
 
     <div class="app-container">
         <div class="panel controls">
-            <h3>1. Influent Matrix Feed</h3>
+            <h3>1. Influent Feed Matrix</h3>
             <div class="section-box">
                 <div class="form-group">
-                    <label for="industryType">Wastewater Source Characterization</label>
+                    <label for="industryType">Wastewater Stream Classification</label>
                     <select id="industryType">
                         <option value="MUNICIPAL">Municipal Domestic Sewage</option>
                         <option value="DAIRY">Dairy & Food Processing</option>
@@ -170,7 +170,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="flowInput">Volumetric Design Capacity (m³/day)</label>
+                    <label for="flowInput">Volumetric Flow Capacity (m³/day)</label>
                     <input type="number" id="flowInput" value="25" min="1">
                 </div>
                 <div class="grid-inputs">
@@ -193,17 +193,17 @@
                 </div>
                 <div class="grid-inputs" style="margin-top: 6px;">
                     <div class="form-group">
-                        <label for="phInput">Raw Feed pH</label>
+                        <label for="phInput">Influent Stream pH</label>
                         <input type="number" id="phInput" value="8.8" step="0.1">
                     </div>
                     <div class="form-group">
-                        <label for="fogInput">Raw Fats/Lipids FOG (mg/L)</label>
+                        <label for="fogInput">Fats & Oils FOG (mg/L)</label>
                         <input type="number" id="fogInput" value="30">
                     </div>
                 </div>
             </div>
 
-            <h3>2. Intended Target Outflow Thresholds</h3>
+            <h3>2. Intended Target Limits</h3>
             <div class="section-box outflow-box">
                 <div class="grid-inputs">
                     <div class="form-group">
@@ -216,7 +216,7 @@
                     </div>
                 </div>
                 <div class="form-group" style="margin-top: 6px;">
-                    <label for="targetTds">Max Allowed TDS / Salinity (mg/L)</label>
+                    <label for="targetTds">Max Allowed TDS (mg/L)</label>
                     <input type="number" id="targetTds" value="500" min="0">
                 </div>
             </div>
@@ -226,7 +226,7 @@
         </div>
 
         <div class="panel canvas">
-            <h3 style="width:100%; text-align:left; color:#1e3a8a;">Automated Process Flow Diagram (PFD)</h3>
+            <h3>Automated Process Flow Diagram (PFD)</h3>
             <div id="pfdContainer" class="pfd-container">
                 <p class="placeholder-text">Input parameters and click execute to assemble reactive unit operations...</p>
             </div>
@@ -241,16 +241,16 @@
         </div>
 
         <div class="panel ai-assistant">
-            <h3>4. Expert Process AI Assistant</h3>
+            <h3>4. Experienced Process AI Advisor</h3>
             <div class="form-group" style="margin-bottom: 6px;">
-                <label for="apiKeyInput" style="color:#2563eb;">OpenAI API Key (Stored locally)</label>
-                <input type="password" id="apiKeyInput" placeholder="sk-proj-..." style="padding: 4px 8px; font-size:11px;">
+                <label for="apiKeyInput" style="color:#2563eb; font-weight: bold;">Google Gemini API Key</label>
+                <input type="password" id="apiKeyInput" placeholder="Enter AIzaSy..." style="padding: 4px 8px; font-size:11px;">
             </div>
             <div id="chatHistory" class="chat-history">
-                <div class="chat-bubble system">Expert Persona Calibrated: Senior Environmental Process Engineer. Ask anything about design limits, plant footprints, or chemical scaling.</div>
+                <div class="chat-bubble system">Expert Persona Calibrated: Senior Process Engineer with years of real-world wastewater engineering experience. Ask me about custom anomalies, troubleshooting, or plant footprint limits.</div>
             </div>
             <div class="chat-input-row">
-                <input type="text" id="chatMessageInput" placeholder="Describe operational context or anomalies...">
+                <input type="text" id="chatMessageInput" placeholder="Ask about this stream or layout configuration...">
                 <button id="sendChatBtn" class="btn-send">Send</button>
             </div>
         </div>
@@ -291,6 +291,7 @@
     </div>
 
     <script>
+        // Core Mathematical Simulation Engine for WWTP Chain Sequencing
         class SmartTreatmentChain {
             constructor(inf, tgt) {
                 this.flow = inf.flow;
@@ -319,22 +320,22 @@
                 if (totalTdsEff > 10 || this.limitTds < 600) this.isROActive = true;
                 if (totalBodEff > 94 || this.limitBod < 10 || this.limitTss < 5) this.isMBRActive = true;
 
-                this.addNode("Mechanical Bar Screening", "Intercepts larger raw objects and plastics.", "physical", 
+                this.addNode("Mechanical Bar Screening", "Intercepts larger raw debris and plastics.", "physical", 
                     { flow: currentFlow, inputTss: cTss, outputTss: cTss, metric: "Grid Opening: 6-15mm" });
 
                 const eqVol = Math.round((currentFlow / 24) * 6 * 10) / 10;
-                this.addNode("Flow Equalization Basin", "Normalizes hydraulic spikes and chemical variances.", "physical",
+                this.addNode("Flow Equalization Basin", "Stabilizes hydraulic surges and concentration fluctuations.", "physical",
                     { flow: currentFlow, inputTss: cTss, outputTss: cTss, metric: `Sized Volume: ${eqVol} m³` });
 
                 if (this.ph < 6.5 || this.ph > 8.2) {
-                    this.addNode("Automated pH Titration Module", `Stabilizes aggressive raw pH (${this.ph}) down to 7.2 using inline reagent pumps.`, "chemical",
-                        { flow: currentFlow, inputTss: cTss, outputTss: cTss, metric: "Dosing Loop: HCl/NaOH" });
+                    this.addNode("Automated pH Correction Module", `Neutralizes aggressive raw stream pH (${this.ph}) back to 7.2 using continuous chemical injection loops.`, "chemical",
+                        { flow: currentFlow, inputTss: cTss, outputTss: cTss, metric: "Reagents: HCl / NaOH" });
                 }
 
                 if (this.fog > 50 || this.industry === "DAIRY") {
                     const dafTssOut = Math.round(cTss * 0.7);
-                    this.addNode("Dissolved Air Flotation (DAF)", `Strips free oils and fats (${this.fog} mg/L) using 30-micron microbubbles.`, "chemical",
-                        { flow: currentFlow, inputTss: cTss, outputTss: dafTssOut, metric: "Air-to-Solids Ratio: 0.02" });
+                    this.addNode("Dissolved Air Flotation (DAF)", `Separates fats and oils (${this.fog} mg/L) using 30-micron microbubble buoyancy loops.`, "chemical",
+                        { flow: currentFlow, inputTss: cTss, outputTss: dafTssOut, metric: "Air-Solids Ratio: 0.02" });
                     cTss = dafTssOut;
                 }
 
@@ -342,15 +343,15 @@
                     const coagTssOut = Math.round(cTss * 0.25);
                     const flashM3 = Math.round((currentFlow / 86400) * 45 * 100) / 100;
                     const flocM3 = Math.round((currentFlow / 1440) * 25 * 10) / 10;
-                    this.addNode("Coagulation / Flocculation Train", "Chemical flash mixing and slow paddle maturation aggregates fine colloids into heavy macroscopic flocs.", "chemical",
-                        { flow: currentFlow, inputTss: cTss, outputTss: coagTssOut, metric: `Flash Mix: ${flashM3}m³ | Floc: ${flocM3}m³` });
+                    this.addNode("Coagulation / Flocculation Matrix", "Flash mixing of chemical coagulants aggregates fine colloids into heavy settleable flocs.", "chemical",
+                        { flow: currentFlow, inputTss: cTss, outputTss: coagTssOut, metric: `Mixers: ${flashM3}m³ | Floc: ${flocM3}m³` });
                     cTss = coagTssOut;
                 }
 
                 const primTssOut = Math.round(cTss * 0.45);
                 const clarifierArea = Math.round((currentFlow / 35) * 10) / 10;
-                this.addNode("Primary Gravity Clarifier", "Allows heavy agglomerated mass layers to sink out, reducing load to biological stages.", "physical",
-                    { flow: currentFlow, inputTss: cTss, outputTss: primTssOut, metric: `Surface Area: ${clarifierArea} m²` });
+                this.addNode("Primary Gravity Clarifier", "Allows heavy agglomerated mass layers to settle, reducing burden to downstream biological loops.", "physical",
+                    { flow: currentFlow, inputTss: cTss, outputTss: primTssOut, metric: `Clarifier Area: ${clarifierArea} m²` });
                 cTss = primTssOut;
 
                 const SRT = this.isMBRActive ? 15 : 10; const Y = 0.6; const b = 0.06; const MLSS = this.isMBRActive ? 8000 : 3000;
@@ -360,46 +361,45 @@
                 if (this.isMBRActive) {
                     cBod = Math.min(cBod, 3);
                     cTss = 0;
-                    this.addNode("Submerged Membrane Bioreactor (MBR)", "High-density biomass aeration combined directly with hollow-fiber ultrafiltration loop barriers.", "biological",
-                        { flow: currentFlow, inputTss: this.tss, outputTss: 0, metric: `Reactor: ${bioVolume}m³ | HRT: ${hrtHours}h` });
+                    this.addNode("Submerged Membrane Bioreactor (MBR)", "High-density biomass aeration integrated directly with hollow-fiber ultrafiltration membrane absolute filters.", "biological",
+                        { flow: currentFlow, inputTss: this.tss, outputTss: 0, metric: `Reactor Vol: ${bioVolume}m³ | HRT: ${hrtHours}h` });
                 } else {
                     cBod = Math.min(cBod, 15);
                     cTss = Math.min(cTss, 20);
-                    this.addNode("Conventional Activated Sludge (CAS) Basin", "Diffuse aerobic aeration oxidizing dissolved organics.", "biological",
-                        { flow: currentFlow, inputTss: this.tss, outputTss: cTss, metric: `Reactor: ${bioVolume}m³ | HRT: ${hrtHours}h` });
+                    this.addNode("Conventional Activated Sludge (CAS) Basin", "Suspended growth aerobic bioreactor utilizing diffuse aeration grids to eliminate carbonaceous BOD.", "biological",
+                        { flow: currentFlow, inputTss: this.tss, outputTss: cTss, metric: `Bioreactor: ${bioVolume}m³ | HRT: ${hrtHours}h` });
                     
-                    this.addNode("Secondary Settling Clarifier", "Decants active microbial biological biomass floc back to the main reactor loop head.", "physical",
-                        { flow: currentFlow, inputTss: cTss, outputTss: cTss, metric: "Surface Overflow Rate: 16 m³/m²·d" });
+                    this.addNode("Secondary Settling Clarifier", "Decants active microbial biomass, recycling settled activated sludge back to the reactor head.", "physical",
+                        { flow: currentFlow, inputTss: cTss, outputTss: cTss, metric: "Overflow Rate: 16 m³/m²·d" });
                 }
 
                 if (this.isROActive && !this.isMBRActive) {
                     const filterTssOut = Math.round(cTss * 0.15);
-                    this.addNode("Pressure Multimedia Sand Filtration Skid", "CRITICAL BARRIER: Automatically added ahead of RO to intercept residual secondary solids and lower the Silt Density Index (SDI).", "physical",
-                        { flow: currentFlow, inputTss: cTss, outputTss: filterTssOut, metric: "Filtration Velocity: 12 m/h" });
+                    this.addNode("Pressure Multimedia Sand Filtration Skid", "Polishing sand filter acting as a safety screen to capture remaining secondary escape flocs ahead of RO membranes.", "physical",
+                        { flow: currentFlow, inputTss: cTss, outputTss: filterTssOut, metric: "Flux Speed: 12 m/h" });
                     cTss = filterTssOut;
                 }
 
                 if (this.isROActive) {
-                    this.addNode("Cartridge Micro-Filtration (5-Micron) & Antiscalant Loop", "Final polished protection array preventing particulate entry and scale precipitation on tight RO membranes.", "chemical",
-                        { flow: currentFlow, inputTss: cTss, outputTss: 0, metric: "Dosing: 4 mg/L Polyacrylate" });
+                    this.addNode("Cartridge Micro-Filtration (5µ) & Antiscalant Unit", "Polished security filter matrix ensuring absolute protection against mechanical scaling of high-pressure RO configurations.", "chemical",
+                        { flow: currentFlow, inputTss: cTss, outputTss: 0, metric: "Dose Rate: 4 mg/L Antiscalant" });
                     cTss = 0;
 
                     const recovery = 0.75;
                     const permeateFlow = Math.round(currentFlow * recovery * 10) / 10;
                     const concentrateFlow = Math.round((currentFlow - permeateFlow) * 10) / 10;
-                    
                     const saltPassage = 0.015;
                     const permeateTds = Math.round(this.tds * saltPassage);
                     
-                    this.addNode("Reverse Osmosis (RO) Crossflow Pack", `Splits stream based on osmotic pressure limit bounds. High mineral rejection efficiency.`, "advanced",
+                    this.addNode("Reverse Osmosis (RO) Desalination Array", "Crossflow membrane pack stripping dissolved inorganic ion matrices using high mechanical feed pressures.", "advanced",
                         { flow: currentFlow, inputTss: 0, outputTss: 0, metric: `Permeate: ${permeateFlow}m³/d (${permeateTds}mg/L) | Brine: ${concentrateFlow}m³/d` });
                     
                     currentFlow = permeateFlow;
                     cTds = permeateTds;
 
                     if (this.limitTds <= 50 || totalTdsEff > 95) {
-                        this.addNode("Thermal Evaporator & Crystallizer Unit", `Boils remaining ${concentrateFlow} m³/day corrosive waste brine down into dry solid salt cakes for 100% closed loop containment.`, "advanced",
-                            { flow: concentrateFlow, inputTss: 0, outputTss: 0, metric: "Steam Footprint Coefficient: 0.25 t/m³" });
+                        this.addNode("Thermal Evaporator & Crystallizer Unit", `Boils remaining ${concentrateFlow} m³/day corrosive brine stream down into solid mineral cakes for 100% dry containment.`, "advanced",
+                            { flow: concentrateFlow, inputTss: 0, outputTss: 0, metric: "Thermal Efficiency Index: 0.25 t/m³" });
                     }
                 }
 
@@ -412,13 +412,13 @@
 
             validateFinalCompliance(finalBod, finalTss, finalTds) {
                 if (finalBod > this.limitBod) {
-                    this.warnings.push(`⚠️ <strong>BOD Target Gap:</strong> Simulated outflow BOD (${finalBod} mg/L) breaks your custom maximum ceiling limit (${this.limitBod} mg/L).`);
+                    this.warnings.push(`⚠️ <strong>Organic Target Gap:</strong> Outflow BOD (${finalBod} mg/L) violates your maximum limit boundary (${this.limitBod} mg/L).`);
                 }
                 if (finalTss > this.limitTss) {
-                    this.warnings.push(`⚠️ <strong>TSS Filtration Gap:</strong> Simulated final solids concentration (${finalTss} mg/L) exceeds your maximum specification target.`);
+                    this.warnings.push(`⚠️ <strong>Solids Filtration Gap:</strong> Output suspended mass (${finalTss} mg/L) exceeds your allowed specification.`);
                 }
                 if (finalTds > this.limitTds) {
-                    this.warnings.push(`⚠️ <strong>TDS Salinity Desalination Deficit:</strong> Final output minerals (${finalTds} mg/L) bypass compliance levels (${this.limitTds} mg/L).`);
+                    this.warnings.push(`⚠️ <strong>Desalination Deficit:</strong> Escaping minerals (${finalTds} mg/L) cross your permitted threshold (${this.limitTds} mg/L).`);
                 }
             }
         }
@@ -484,7 +484,7 @@
             });
 
             if (warnings.length === 0) {
-                warningContainer.innerHTML = `<div class="warning-banner" style="background-color:#e6f4ea; border-left-color:#137333; color:#137333;">✓ <strong>Total Chain Compliance:</strong> The multi-barrier process sequence successfully achieves all target outflow properties.</div>`;
+                warningContainer.innerHTML = `<div class="warning-banner" style="background-color:#e6f4ea; border-left-color:#137333; color:#137333;">✓ <strong>Plant Compliance Achieved:</strong> The designed configuration meets all final outflow parameter thresholds.</div>`;
             }
 
             const nodeCount = nodes.length;
@@ -494,7 +494,7 @@
             let tableRows = '';
             nodes.forEach(n => {
                 tableRows += `
-                    <tr style="border-bottom:1px dotted #1e293b;">
+                    <tr style="border-bottom:1px dotted #334155;">
                         <td style="padding:4px; opacity:0.9;">${n.title}</td>
                         <td style="padding:4px; text-align:right; color:#38bdf8;">${n.data.inputTss} mg/L</td>
                         <td style="padding:4px; text-align:right; color:#34d399;">${n.data.outputTss} mg/L</td>
@@ -505,30 +505,29 @@
             let markup = `
                 <h4>1. Boundary Efficiency Demands</h4>
                 <ul>
-                    <li>Process Stream Flux: <span class="output-highlight">${inf.flow} m³/day</span></li>
-                    <li>Required Organic Destruction: <span class="output-highlight">${(((inf.bod - tgt.bod)/inf.bod)*100).toFixed(1)}%</span></li>
-                    <li>Required Mineral Interception: <span class="output-highlight">${(((inf.tds - tgt.tds)/inf.tds)*100).toFixed(1)}%</span></li>
+                    <li>Hydraulic Loading: <span class="output-highlight">${inf.flow} m³/day</span></li>
+                    <li>Target Organic Destruction: <span class="output-highlight">${(((inf.bod - tgt.bod)/inf.bod)*100).toFixed(1)}%</span></li>
+                    <li>Mineral Interception Rate: <span class="output-highlight">${(((inf.tds - tgt.tds)/inf.tds)*100).toFixed(1)}%</span></li>
                 </ul>
 
-                <h4>2. Unit Chain Mass Balance Analytics</h4>
+                <h4>2. Unit Step Solids Accounting</h4>
                 <table style="width:100%; border-collapse:collapse; margin:5px 0; font-size:11px; color:#cbd5e1;">
                     <tr style="border-bottom:1px solid #334155; text-align:left;">
-                        <th style="padding:4px;">Operation Unit Node Name</th>
+                        <th style="padding:4px;">Operation Unit Block</th>
                         <th style="padding:4px; text-align:right;">In TSS</th>
                         <th style="padding:4px; text-align:right;">Out TSS</th>
                     </tr>
                     ${tableRows}
                 </table>
 
-                <h4>3. Cumulative Process Cost Curves</h4>
+                <h4>3. Approximated Process Financials</h4>
                 <ul>
-                    <li>Active Process Unit Steps: <span class="output-highlight">${nodeCount} Discrete Nodes</span></li>
-                    <li>Estimated Asset CAPEX Cost: <span class="output-highlight">€${estimatedCAPEX.toLocaleString()} EUR</span></li>
-                    <li>Calculated Specific OPEX Cost: <span class="output-highlight">€${estimatedOPEXM3.toFixed(2)} EUR/m³</span></li>
-                    <li>Daily Operational Reagent/Power Bill: <span class="output-highlight">€${Math.round(estimatedOPEXM3 * inf.flow).toLocaleString()} EUR/day</span></li>
+                    <li>Active Process Operations: <span class="output-highlight">${nodeCount} Stages</span></li>
+                    <li>Estimated Asset CAPEX: <span class="output-highlight">€${estimatedCAPEX.toLocaleString()} EUR</span></li>
+                    <li>Calculated Unit OPEX: <span class="output-highlight">€${estimatedOPEXM3.toFixed(2)} EUR/m³</span></li>
+                    <li>Daily Operational Reagent Cost: <span class="output-highlight">€${Math.round(estimatedOPEXM3 * inf.flow).toLocaleString()} EUR/day</span></li>
                 </ul>
             `;
-
             ledger.innerHTML = markup;
         }
 
@@ -617,13 +616,9 @@
             });
         }
 
-        /* CALIBRATION LOGIC: This system prompt primes the AI model to act strictly as 
-           a Senior Environmental Process Engineer with extensive field experience.
-        */
-        const SYSTEM_CALIBRATION_PROMPT = `You are a Senior Environmental Engineer and Water/Wastewater Treatment Plant (WWTP) process design specialist with decades of hands-on experience in industrial troubleshooting, municipal commissioning, and regulatory compliance. 
-Your guidance must be highly realistic, factual, practical, and grounded in real-world chemical/biological process limitations (e.g., osmotic pressure bounds, flux limits, fouling tendencies, chemical dosing anomalies). 
-Do not give vague theoretical suggestions. Provide exact technical justifications, calculations, or empirical design parameters where appropriate.`;
-
+        // ============================================================================
+        // EXPERT PROCESS ENGINEERING AI CONSULTING LOOP (DIRECT SECURE GEMINI GATEWAY)
+        // ============================================================================
         async function submitUserChatMessage() {
             const apiKey = document.getElementById('apiKeyInput').value.trim();
             const messageText = document.getElementById('chatMessageInput').value.trim();
@@ -631,7 +626,7 @@ Do not give vague theoretical suggestions. Provide exact technical justification
 
             if (!messageText) return;
 
-            // Render user text bubble locally
+            // Render User Chat Bubble locally
             const userBubble = document.createElement('div');
             userBubble.className = 'chat-bubble user';
             userBubble.innerText = messageText;
@@ -642,33 +637,105 @@ Do not give vague theoretical suggestions. Provide exact technical justification
             if (!apiKey) {
                 const errBubble = document.createElement('div');
                 errBubble.className = 'chat-bubble ai';
-                errBubble.innerHTML = "<span style='color:red;'>⚠️ Error: Missing OpenAI API Key. Please insert a valid key in the top input box to authorize requests.</span>";
+                errBubble.innerHTML = "<span style='color:#dc2626; font-weight:600;'>⚠️ Error: Missing Gemini API Key. Please insert a valid key in the top box to initialize the engineering channel.</span>";
                 chatHistory.appendChild(errBubble);
+                chatHistory.scrollTop = chatHistory.scrollHeight;
                 return;
             }
 
-            // Render a temporary loading placeholder
+            // Render Loader
             const loadingBubble = document.createElement('div');
             loadingBubble.className = 'chat-bubble ai';
-            loadingBubble.innerText = 'Analyzing stream context...';
+            loadingBubble.innerText = 'Calculating process dynamics...';
             chatHistory.appendChild(loadingBubble);
             chatHistory.scrollTop = chatHistory.scrollHeight;
 
+            // 1. DYNAMIC SYSTEM EXTRACTION: Scrape the active screen metrics to feed the AI context
+            const activeContext = {
+                streamType: document.getElementById('industryType').value,
+                dailyFlowRate: document.getElementById('flowInput').value,
+                influentBod: document.getElementById('bodInput').value,
+                influentCod: document.getElementById('codInput').value,
+                influentTss: document.getElementById('tssInput').value,
+                influentTds: document.getElementById('tdsInput').value,
+                influentPh: document.getElementById('phInput').value,
+                influentFog: document.getElementById('fogInput').value,
+                targetAllowedBod: document.getElementById('targetBod').value,
+                targetAllowedTss: document.getElementById('targetTss').value,
+                targetAllowedTds: document.getElementById('targetTds').value
+            };
+
+            // 2. FORCE EXPERT PERSONA PRICING LOGIC VIA COMPLEX INSTRUCTION PACKET
+            const processEngineeringSystemInstructions = `You are a Senior Environmental Engineer and Water/Wastewater Treatment Plant (WWTP) process design specialist with decades of field troubleshooting experience. 
+You offer realistic, practical, factual advice rooted in real-world empirical constants. Avoid abstract theoretical text. Give precise chemical/biological reasoning.
+
+THE USER'S CURRENT SCREEN PARAMETERS ARE AUTOMATICALLY LOADED BELOW. ALWAYS reference or analyze these figures when explaining anomalies:
+- Stream Classification: ${activeContext.streamType}
+- Volumetric Flow: ${activeContext.dailyFlowRate} m³/day
+- Active Influent Loading: BOD: ${activeContext.influentBod} mg/L, COD: ${activeContext.influentCod} mg/L, TSS: ${activeContext.influentTss} mg/L, TDS: ${activeContext.influentTds} mg/L, pH: ${activeContext.influentPh}, FOG: ${activeContext.influentFog} mg/L
+- Target Discharge Limits: Max BOD allowed: ${activeContext.targetAllowedBod} mg/L, Max TSS allowed: ${activeContext.targetAllowedTss} mg/L, Max TDS allowed: ${activeContext.targetAllowedTds} mg/L.`;
+
             try {
-                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                // Route directly to standard front-end secure Gemini endpoints
+                const endpointUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+                
+                const response = await fetch(endpointUrl, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${apiKey}`
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        model: 'gpt-4o', // Utilizing a fast, highly analytical engineering model choice
-                        messages: [
-                            { role: 'system', content: SYSTEM_CALIBRATION_PROMPT },
-                            { role: 'user', content: messageText }
-                        ],
-                        temperature: 0.3 // Low temperature ensures factual, deterministic responses
+                        contents: [{
+                            parts: [{ text: `${processEngineeringSystemInstructions}\n\nUSER QUESTION: ${messageText}` }]
+                        }],
+                        generationConfig: {
+                            temperature: 0.2, // Low temperature ensures engineering precision
+                            maxOutputTokens: 800
+                        }
                     })
                 });
 
-                const
+                const data = await response.json();
+                
+                if (data.candidates && data.candidates[0].content.parts[0].text) {
+                    loadingBubble.innerText = data.candidates[0].content.parts[0].text.trim();
+                } else if (data.error) {
+                    loadingBubble.innerHTML = `<span style='color:#dc2626;'>Gemini Protocol Error: ${data.error.message}</span>`;
+                } else {
+                    loadingBubble.innerText = 'Received uninterpretable data block packet structure from the AI gateway.';
+                }
+            } catch (err) {
+                loadingBubble.innerText = `Network interface routing error: ${err.message}`;
+            }
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+
+        const INDUSTRY_DEFAULTS = {
+            MUNICIPAL: { bod: 120, tss: 70, cod: 700, fog: 30, tds: 2272, ph: 8.8 },
+            DAIRY:     { bod: 2500, tss: 800, cod: 4500, fog: 400, tds: 1200, ph: 5.0 },
+            TEXTILE:   { bod: 300, tss: 400, cod: 1200, fog: 20, tds: 6000, ph: 10.0 },
+            PETROCHEM: { bod: 250, tss: 150, cod: 800, fog: 500, tds: 3000, ph: 6.8 }
+        };
+
+        document.getElementById('industryType').addEventListener('change', function() {
+            const defaults = INDUSTRY_DEFAULTS[this.value];
+            if (defaults) {
+                document.getElementById('bodInput').value = defaults.bod;
+                document.getElementById('codInput').value = defaults.cod;
+                document.getElementById('tssInput').value = defaults.tss;
+                document.getElementById('tdsInput').value = defaults.tds;
+                document.getElementById('phInput').value = defaults.ph;
+                document.getElementById('fogInput').value = defaults.fog;
+            }
+        });
+
+        // Interface event maps
+        document.getElementById('generateBtn').addEventListener('click', processSmartChain);
+        document.getElementById('pdfBtn').addEventListener('click', exportDesignToPDF);
+        
+        // Advisor conversation hook maps
+        document.getElementById('sendChatBtn').addEventListener('click', submitUserChatMessage);
+        document.getElementById('chatMessageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') submitUserChatMessage();
+        });
+    </script>
+</body>
+</html>
